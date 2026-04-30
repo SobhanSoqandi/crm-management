@@ -1,1 +1,19 @@
 @import "tailwindcss";
+
+@layer components {
+    .btn {
+        @apply p-2 rounded-xl shadow cursor-pointer
+    }
+
+    .btn--gold {
+        @apply bg-amber-400 text-emerald-900
+    }
+
+    .btn--primary {
+        @apply bg-emerald-600 text-white
+    }
+
+    .input--style {
+        @apply bg-gray-100 rounded-xl focus:shadow-md focus:ring-1 focus:ring-amber-500 focus:outline-none focus:bg-white block w-full p-3
+    }
+}
