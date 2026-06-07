@@ -1,16 +1,11 @@
+import { ThreeDot } from "react-loading-indicators";
 
-
-import { ThreeDot } from "react-loading-indicators"
-
-
-function Loading() {
-    return (
-    <div className="text-center " >
-        <ThreeDot
-        color="blue"
-        />
+function Loading({ color = "#3b82f6", size = "medium", className = "" }) {
+  return (
+    <div className={`flex justify-center items-center ${className}`}>
+      <ThreeDot color={color} size={size} />
     </div>
-    )
+  );
 }
 
-export default Loading
+export default Loading;

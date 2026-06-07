@@ -1,8 +1,9 @@
+@import url("../public/fonts/font.css");
 @import "tailwindcss";
 
 @layer components {
     .btn {
-        @apply p-2 rounded-xl shadow cursor-pointer
+        @apply p-3 rounded-xl shadow cursor-pointer
     }
 
     .btn--gold {
@@ -10,10 +11,75 @@
     }
 
     .btn--primary {
-        @apply bg-emerald-600 text-white
+        @apply bg-purple-600 text-white
     }
 
     .input--style {
-        @apply bg-gray-100 rounded-xl focus:shadow-md focus:ring-1 focus:ring-emerald-500 focus:outline-none focus:bg-white block w-full p-3
+        @apply bg-gray-100 rounded-xl focus:shadow-md focus:ring-1 focus:ring-purple-500 focus:outline-none focus:bg-white block w-full p-3
+    }
+
+    .table-container {
+        @apply m-5 shadow rounded-xl overflow-x-auto
+    }
+
+
+    .dynamic-table {
+        @apply w-full bg-white border-collapse
+
+    }
+}
+
+
+
+
+.logo {
+    font-family: "lalezar";
+}
+
+body {
+    font-family: "Vazir";
+    direction: rtl;
+}
+
+
+
+
+
+.dynamic-table th {
+    background: #f8fafc;
+    padding: 12px 16px;
+    text-align: right;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #1e293b;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.dynamic-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.875rem;
+    color: #334155;
+}
+
+.dynamic-table tbody tr:hover {
+    background: #fdfbff;
+    transition: 0.2s;
+}
+
+.empty-table {
+    text-align: center;
+    padding: 32px;
+    background: #f8fafc;
+    border-radius: 12px;
+    color: #720095;
+}
+
+@media (max-width: 640px) {
+
+    .dynamic-table th,
+    .dynamic-table td {
+        padding: 8px 12px;
+        font-size: 0.75rem;
     }
 }
