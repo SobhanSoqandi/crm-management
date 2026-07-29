@@ -58,7 +58,7 @@ function Input({
         {isPassword && (
           <span
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-purple-600"
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-[#008080]"
           >
             {showPassword ? <FaEyeSlash /> : <FaRegEye />}
           </span>

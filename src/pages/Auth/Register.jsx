@@ -5,6 +5,7 @@ import { BiArrowBack } from "react-icons/bi";
 import useMoveBack from "../../hooks/useMoveBack";
 
 import useMutationData from "../../services/useMutationData";
+import Logo from "../../components/UI/Logo";
 
 function Register() {
 
@@ -27,10 +28,12 @@ function Register() {
       <div className="w-full lg:w-1/2 flex items-center justify-center px-4">
         <div className="max-w-sm w-full md:shadow-md p-8 rounded-xl">
           <div className="flex justify-between text-center mb-4">
-            <a className="font-[lalezar] font-bold text-purple-600 text-2xl"> رایگان </a>
+           <Logo
+           width={70}
+           />
             <BiArrowBack
               onClick={moveBack}
-              className="text-purple-600 text-2xl" />
+              className="text-blue-500 text-2xl" />
           </div>
           <h2 className="text-lg uppercase font-semibold py-5">
             ثبت نام

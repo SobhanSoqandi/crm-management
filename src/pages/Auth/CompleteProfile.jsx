@@ -4,6 +4,7 @@ import useMoveBack from '../../hooks/useMoveBack';
 import Input from '../../components/UI/Input';
 import Loading from '../../components/UI/Loading';
 import { useForm } from 'react-hook-form';
+import Logo from '../../components/UI/Logo';
 
 function CompleteProfile() {
 
@@ -18,15 +19,14 @@ function CompleteProfile() {
         <div className="w-full min-h-screen items-center flex justify-center px-4">
             <div className="max-w-sm w-full md:shadow-md p-8 rounded-xl">
                 <div className="flex justify-between text-center mb-4">
-                    <a className="font-[lalezar] font-bold text-purple-600 text-2xl"> رایگان </a>
+                    <h2 className="text-lg uppercase font-semibold">
+                        تکمیل پروفایل
+                    </h2>
                     <BiArrowBack
                         onClick={moveBack}
-                        className="text-purple-600 text-2xl" />
+                        className="text-blue-500 text-2xl" />
                 </div>
-                <h2 className="text-lg uppercase font-semibold py-5">
-                    تکمیل پروفایل
-                </h2>
-
+            
                 <form  >
                     <Input
                         register={register}

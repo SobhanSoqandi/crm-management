@@ -4,6 +4,7 @@ import Loading from '../../components/UI/Loading';
 import useMoveBack from "../../hooks/useMoveBack";
 import { BiArrowBack } from "react-icons/bi";
 import useMutationData from "../../services/useMutationData";
+import Logo from "../../components/UI/logo";
 
 function Login() {
 
@@ -16,7 +17,7 @@ function Login() {
   const { mutate, isPending } = useMutationData("login", "POST", "login-toast");
 
   const onSubmit = async (data) => {
-    await mutate(data);
+    await mutate(data);main
   }
 
 
@@ -27,10 +28,11 @@ function Login() {
       <div className="w-full lg:w-1/2 flex items-center justify-center px-4">
         <div className="max-w-sm w-full md:shadow-md p-8 rounded-xl">
           <div className="flex justify-between text-center mb-4">
-            <a className="font-[lalezar] font-bold text-purple-600 text-2xl"> پنل </a>
+           <Logo  width={80} />
+
             <BiArrowBack
               onClick={moveBack}
-              className="text-purple-600 text-2xl" />
+              className="text-[#008080] text-2xl" />
           </div>
           <h2 className="text-lg uppercase font-semibold py-5">
             ورود

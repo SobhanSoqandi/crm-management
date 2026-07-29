@@ -4,25 +4,32 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { BiCheckboxChecked, BiSolidCategoryAlt } from 'react-icons/bi';
 import { RiDashboard3Fill } from 'react-icons/ri';
-import { FaUsers } from 'react-icons/fa';
+import { FaClipboardList, FaListOl, FaUsers, FaUsersCog } from 'react-icons/fa';
 import { IoIosSwitch } from 'react-icons/io';
 import Header from './Header';
 import { BsWallet2 } from 'react-icons/bs';
+import { LuWallet } from 'react-icons/lu';
+import { FaChartColumn } from 'react-icons/fa6';
+import { TbMessageCog, TbMessageUser } from 'react-icons/tb';
 
 function AppLayout() {
     const [isOpen, setIsOpen] = useState(false);
 
     const sidebarConfig = 
         [
-        { label: "داشبورد", icon: <RiDashboard3Fill className="w-6 h-6" />, path: "/panel/complete" },
-        { label: "مدیریت کاربران", icon: <FaUsers className="w-6 h-6" />, path: "/panel/customers" },
+        { label: "داشبورد", icon: <FaChartColumn className="w-6 h-6" />, path: "/panel/complete" },
+        { label: " نوبت ها  ", icon: <FaClipboardList  className="w-6 h-6" />, path: "appointments" },
+        { label: "مدیریت مشتریان", icon: <FaUsersCog className="w-6 h-6" />, path: "/panel/customers" },
         {
-            label: "  کیف پول ", icon: <BsWallet2
-                className="w-6 h-6" />, path: "admin/categories"
+            label: "  کیف پول ", icon: <LuWallet
+                className="w-6 h-6" />, path: "wallet"
         },
+         { label: "  پنل پیامکی ", icon: <TbMessageCog className="w-6 h-6" />, path: "messages" },
         { label: " ویژگی ها ", icon: <IoIosSwitch className="w-6 h-6" />, path: "admin/attributes" },
 
         ]
+
+       
     
 
     const toggleSidebar = () => {
