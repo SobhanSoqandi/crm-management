@@ -8,7 +8,7 @@
     }
 
     .btn {
-        @apply p-3 rounded-xl shadow cursor-pointer
+        @apply p-2 rounded-xl shadow cursor-pointer
     }
 
     .btn--gold {
@@ -19,8 +19,12 @@
         @apply bg-[#20B2AA] text-white
     }
 
+      .btn--light {
+        @apply bg-white border border-gray-200 text-gray-500 
+    }
+
     .input--style {
-        @apply bg-gray-100 rounded-xl focus:shadow-md focus:ring-1 focus:ring-[#20B2AA] focus:outline-none focus:bg-white block w-full p-3
+        @apply bg-gray-50 rounded-xl focus:shadow-md focus:ring-1 focus:ring-[#20B2AA] focus:outline-none focus:bg-white block w-full p-3
     }
 
     .table-container {
@@ -87,3 +91,4 @@ body {
         font-size: 0.75rem;
     }
 }
+

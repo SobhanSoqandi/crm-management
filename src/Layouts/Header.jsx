@@ -1,6 +1,6 @@
 import React from 'react';
 import { FiAlignRight } from 'react-icons/fi';
-import { FaRegUser, FaUserCircle } from 'react-icons/fa';
+import { FaBars, FaRegUser, FaUserCircle } from 'react-icons/fa';
 import Logo from '../components/UI/Logo';
 import { LuUserRound } from 'react-icons/lu';
 import { TbUserCircle } from 'react-icons/tb';
@@ -60,7 +60,7 @@ function Header({ onToggleSidebar }) {
                     onClick={onToggleSidebar}
                     className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                 >
-                    <GoSidebarCollapse className="text-3xl text-zinc-500" />
+                    <FaBars className="text-2xl text-zinc-600" />
                 </button>
 
             </div>

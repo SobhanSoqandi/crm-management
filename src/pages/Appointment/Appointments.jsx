@@ -1,12 +1,16 @@
 import React from 'react'
 import HeaderAppoint from './HeaderAppoint'
 import DynamicTable from "../../components/UI/DynamicTable"
-import { MdPayment } from 'react-icons/md';
+import { MdOutlineRestorePage, MdPayment } from 'react-icons/md';
 import { BiTrash } from 'react-icons/bi';
 import { formatnumber } from '../../Utils/ToPersianNumber';
+import Modal from '../../components/UI/modal';
+import Payappointment from './payment/Payappointment';
+import { FaCashRegister } from 'react-icons/fa';
 
 
 function Appointments() {
+
 
 
     const columns = [
@@ -42,38 +46,62 @@ function Appointments() {
             label: "عملیات",
             width: "30%",
             render: (_, row) => (
-                <div className="flex gap-2" >
-                    <button
-                        className="btn--mini bg-rose-500 text-white "
-                        onClick={() => openModal(row)}
-                    >
-                        <BiTrash className="text-base md:text-xl text-white" />
-                        <span className="hidden md:block" > حذف </span>
-                    </button>
+                <div className="flex gap-2">
+                    {!row.isDeleted && (
+                        <>
+                            <Modal>
+                                <Modal.Open name="payment">
+                                    <button className="btn--mini bg-emerald-500 text-white">
+                                        <MdPayment className="text-xl" />
+                                        <span>پرداخت</span>
+                                    </button>
+                                </Modal.Open>
 
-                    <button
-                        className="btn--mini bg-teal-500 text-white "
-                        onClick={() => openModal(row)}
-                    >
-                        <MdPayment className="text-base md:text-xl text-amber-400" />
-                        پرداخت
-                    </button>
+                                <Modal.Window name="payment">
+                                    <div className="p-6">
+                                        <h2 className="text-lg font-bold">
+                                            پرداخت
+                                        </h2>
+
+                                        <Payappointment />
+                                    </div>
+                                </Modal.Window>
+                            </Modal>
+
+                            <button
+                                className="btn--mini bg-rose-500 text-white"
+                                onClick={() => openModal(row)}
+                            >
+                                <BiTrash className="text-xl" />
+                                <span>حذف</span>
+                            </button>
+                        </>
+                    )}
+
+                    {row.isDeleted && (
+                        <button
+                            className="btn--mini bg-blue-400 text-white"
+                            onClick={() => openModal(row)}
+                        >
+                            <MdOutlineRestorePage className="text-xl" />
+                            <span>جایگزینی</span>
+                        </button>
+                    )}
                 </div>
-
             ),
-        },
+        }
     ]
 
     const data = [
-        { id: 1, name: ' کبری کاریزی ', price: '35000', op: " پرداخت ", service: 'مو', time: "12:30", phone: "09151542225" },
-        { id: 2, name: 'سارا محمدی', price: '700000', op: 'پردخت', service: 'لیزر', time: "14:30", phone: "09151542225" },
+        { id: 1, name: ' کبری کاریزی ', price: '35000', op: " پرداخت ", service: 'مو', time: "12:30", isDeleted: false, phone: "09151542225" },
+        { id: 2, name: 'سارا محمدی', price: '700000', op: 'پردخت', service: 'لیزر', time: "14:30", isDeleted: true, phone: "09151542225" },
     ];
 
     return (
         <div className="container mx-auto" >
             <HeaderAppoint />
 
-            <div className="w-full" >
+            <div className="w-full p-3" >
                 <DynamicTable columns={columns} data={data} keyField="id" />
             </div>
         </div>

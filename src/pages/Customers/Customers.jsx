@@ -4,6 +4,10 @@ import Loading from '../../components/UI/Loading';
 import { FcClock } from 'react-icons/fc';
 import { MdOutlineRestore } from 'react-icons/md';
 import { formatnumber } from '../../Utils/ToPersianNumber';
+import SearchInput from '../../components/UI/SearchInput';
+import Modal from '../../components/UI/modal';
+import History from './History/History';
+import HistoryCustomer from './History/HistoryCustomer';
 
 function Customers() {
 
@@ -35,13 +39,20 @@ function Customers() {
             label: "عملیات",
             width: "30%",
             render: (_, row) => (
-                <button
-                    className="btn--mini"
-                    onClick={() => openModal(row)}
-                >
-                    <MdOutlineRestore className="text-base md:text-xl" />
-                    تاریخچه
-                </button>
+                <Modal>
+                    <Modal.Open>
+                        <button
+                            className="btn--mini"
+                            onClick={() => openModal(row)}
+                        >
+                            <MdOutlineRestore className="text-base md:text-xl" />
+                            تاریخچه
+                        </button>
+                    </Modal.Open>
+                    <Modal.Window>
+                        <HistoryCustomer />
+                    </Modal.Window>
+                </Modal>
             ),
         },
     ];
@@ -52,8 +63,14 @@ function Customers() {
     ];
 
     return (
-        <div className="w-full container mx-auto" >
-            <DynamicTable columns={columns} data={data} keyField="id" />
+        <div className="w-full container mx-auto p-4" >
+            <div className="max-w-96" >
+                <SearchInput />
+
+            </div>
+            <div className="py-3" >
+                <DynamicTable columns={columns} data={data} keyField="id" />
+            </div>
         </div>
     )
 }
