@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { BiCheckboxChecked, BiSolidCategoryAlt } from 'react-icons/bi';
 import { RiDashboard3Fill } from 'react-icons/ri';
-import { FaClipboardList, FaListOl, FaUsers, FaUsersCog } from 'react-icons/fa';
+import { FaClipboardList, FaListOl, FaUserEdit, FaUsers, FaUsersCog } from 'react-icons/fa';
 import { IoIosSwitch } from 'react-icons/io';
 import Header from './Header';
 import { BsWallet2 } from 'react-icons/bs';
@@ -18,6 +18,7 @@ function AppLayout() {
     const sidebarConfig = 
         [
         { label: "داشبورد", icon: <FaChartColumn className="w-6 h-6" />, path: "/panel/complete" },
+        { label: " پروفایل ", icon: <FaUserEdit className="w-6 h-6" />, path: "/panel/profile" },
         { label: " نوبت ها  ", icon: <FaClipboardList  className="w-6 h-6" />, path: "appointments" },
         { label: "مدیریت مشتریان", icon: <FaUsersCog className="w-6 h-6" />, path: "/panel/customers" },
         {
@@ -26,7 +27,6 @@ function AppLayout() {
         },
          { label: "  پنل پیامکی ", icon: <TbMessageCog className="w-6 h-6" />, path: "messages" },
         { label: " ویژگی ها ", icon: <IoIosSwitch className="w-6 h-6" />, path: "admin/attributes" },
-
         ]
 
        

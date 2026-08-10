@@ -28,7 +28,7 @@ function Login() {
       <div className="w-full lg:w-1/2 flex items-center justify-center px-4">
         <div className="max-w-sm w-full md:shadow-md p-8 rounded-xl">
           <div className="flex justify-between text-center mb-4">
-           <Logo  width={80} />
+           <Logo className="w-[80px]" />
 
             <BiArrowBack
               onClick={moveBack}
