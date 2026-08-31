@@ -1,29 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import { Calendar } from "react-multi-date-picker";
-import { JALALI_CONFIG, getToday, getTomorrow } from "./dateUtils";
-import useAppointmentDate from "./useAppointmentDate";
-import { FaCalendarDay } from "react-icons/fa";
+import { JALALI_CONFIG, getToday, getTomorrow, isSameDay } from "./dateUtils";
 import { HiOutlineCalendarDays } from "react-icons/hi2";
+import "./calendar.css";
 
 export default function AppointmentDateSelector({ value, onChange }) {
   const wrapperRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-  const { selectedDate, setSelectedDate, isToday, isTomorrow, label } =
-    useAppointmentDate(value);
 
-  const activeDate = value ?? selectedDate;
+  const [calendarAnchor] = useState(getToday());
 
-  function selectDate(date) {
-    setSelectedDate(date);
-    onChange?.(date);
-  }
+  const isAll = value === null;
+  const isToday = value ? isSameDay(value, getToday()) : false;
+  const isTomorrow = value ? isSameDay(value, getTomorrow()) : false;
+
+  const activeDate = value ?? calendarAnchor;
 
   function selectDateAndClose(date) {
-    selectDate(date);
+    onChange?.(date);
     setIsOpen(false);
   }
 
-  // بستن تقویم با کلیک بیرون از آن
   useEffect(() => {
     function handleClickOutside(event) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
@@ -54,15 +51,22 @@ export default function AppointmentDateSelector({ value, onChange }) {
         فردا
       </button>
 
+      <button
+        type="button"
+        className={`apt-chip ${isAll ? "is-active" : ""}`}
+        onClick={() => selectDateAndClose(null)}
+      >
+        همه‌ی نوبت‌ها
+      </button>
+
       <div className="apt-calendar-wrapper">
         <button
           type="button"
-          className={`apt-chip flex gap-2 ${!isToday && !isTomorrow ? "is-active" : ""}`}
+          className={`apt-chip flex gap-1 ${!isToday && !isTomorrow && !isAll ? "is-active" : ""}`}
           onClick={() => setIsOpen((open) => !open)}
         >
           <HiOutlineCalendarDays className="text-xl md:text-2xl" />
           تقویم
-          {/* {!isToday && !isTomorrow ? label : "  "} */}
         </button>
 
         {isOpen && (

@@ -45,11 +45,11 @@ function Select({
             ${
               errors?.[name]
                 ? "border-red-400 focus:border-red-500"
-                : "border-slate-200 focus:border-blue-500"
+                : "border-slate-200 focus:border-[#e4ab00]"
             }
 
             focus:ring-1
-            focus:ring-blue-100
+            focus:ring-[#e4ab00]
           `}
         >
 

@@ -9,7 +9,7 @@ function Landing() {
       <Modal>
         <Modal.Open name="payment">
           <button
-            className="btn--mini bg-blue-500 text-white"
+            className="btn--mini  text-white"
           >
 
             <span>پرداخت</span>

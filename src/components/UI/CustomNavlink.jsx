@@ -23,7 +23,7 @@ export function CustomNavLink({
               ${
                 isActive
                   ? `
-                    text-blue-500
+                    text-[#d6a100]
                     shadow-sm
                     before:absolute
                     before:right-0
@@ -31,10 +31,10 @@ export function CustomNavLink({
                     before:-translate-y-1/2
                     before:w-1
                     before:h-8
-                    before:bg-blue-500
+                    before:bg-[#d6a100]
                     before:rounded-l-full
                   `
-                  : "text-zinc-500 hover:bg-gray-50 hover:text-blue-500"
+                  : "text-zinc-500 hover:bg-[#fff8db] hover:text-[#daa400]"
               }
             `}
           >

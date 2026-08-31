@@ -22,26 +22,34 @@ export const formatnumber = {
     return `${numberFormatter.format(Number(value))} ${currency}`;
   },
 
-  // تاریخ کامل
+  // تاریخ کامل (روز، ماه، سال - راست‌به‌چپ)
   date(value) {
     if (!value) return "";
 
-    return new Intl.DateTimeFormat("fa-IR", {
+    const parts = new Intl.DateTimeFormat("fa-IR", {
       weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
-    }).format(new Date(value));
+    }).formatToParts(new Date(value));
+
+    const get = (type) => parts.find((p) => p.type === type)?.value || "";
+
+    return `${get("weekday")}، ${get("day")} ${get("month")} ${get("year")}`;
   },
 
-  // تاریخ کوتاه
+  // تاریخ کوتاه (روز، ماه - راست‌به‌چپ)
   shortDate(value) {
     if (!value) return "";
 
-    return new Intl.DateTimeFormat("fa-IR", {
+    const parts = new Intl.DateTimeFormat("fa-IR", {
       month: "long",
       day: "numeric",
-    }).format(new Date(value));
+    }).formatToParts(new Date(value));
+
+    const get = (type) => parts.find((p) => p.type === type)?.value || "";
+
+    return `${get("day")} ${get("month")}`;
   },
 
   // ساعت

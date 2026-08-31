@@ -1,6 +1,8 @@
 // WalletCards.jsx
 import { FiCreditCard, FiUsers, FiRefreshCw } from "react-icons/fi";
 import { formatnumber } from "../../../Utils/ToPersianNumber";
+import { GrMoney } from "react-icons/gr";
+
 
 const ICONS = {
   FiCreditCard: FiCreditCard,
@@ -38,7 +40,7 @@ export default function WalletCards({ items }) {
   <div className="flex items-center justify-between mb-6">
     <span
       className={`text-sm ${
-        isPrimary ? "text-emerald-50" : "text-gray-500"
+        isPrimary ? "text-white" : "text-gray-500"
       }`}
     >
       {item.label}
@@ -46,12 +48,12 @@ export default function WalletCards({ items }) {
 
     <div
       className={`rounded-2xl flex items-center justify-center p-2 ${
-        isPrimary ? "bg-emerald-50" : "bg-gray-200"
+        isPrimary ? "bg-[#F6E9B2]" : "bg-gray-200"
       }`}
     >
       <Icon
         className={`text-3xl md:text-4xl ${
-          isPrimary ? "text-emerald-600" : "text-gray-400"
+          isPrimary ? "text-[#daa400]" : "text-gray-400"
         }`}
       />
     </div>

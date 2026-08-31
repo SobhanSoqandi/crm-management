@@ -12,8 +12,16 @@ import Appointments from './pages/Appointment/Appointments'
 import Wallet from './pages/wallet/Wallet'
 import Messages from './pages/messages/Messages'
 import SupportPage from './pages/support/SupportPage'
+import ProtectedRoute from './components/common/ProtectedRoute'
+import Services from './pages/salonservices/Services'
 
 function App() {
+
+  const ROLES = {
+    ADMIN: "admin",
+    CUSTOMER: "customer",
+    OWNER: "owner",
+  };
 
 
   return (
@@ -23,16 +31,26 @@ function App() {
         reverseOrder={false}
       />
       <Routes>
-        <Route path="/" element={<Landing />} />
+        {/* <Route path="/" element={<Landing />} /> */}
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
 
 
-        <Route path="panel" element={<AppLayout />} >
+
+        <Route path="/panel" element={<AppLayout />} >
           <Route path="profile" element={<CompleteProfile />} />
-          <Route path="customers" element={<Customers />} />
-          <Route path="appointments" element={<Appointments />} />
+          <Route
+            path="customers"
+            element={
+              // <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.OWNER]}>
+                <Customers />
+              // </ProtectedRoute>
+            }
+          />
+          <Route path="appointments" element={<Appointments />
+          } />
           <Route path="messages" element={<Messages />} />
+          <Route path="services" element={<Services />} />
           <Route path="wallet" element={<Wallet />} />
           <Route path="support" element={<SupportPage />} />
         </Route>
