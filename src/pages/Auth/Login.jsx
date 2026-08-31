@@ -4,21 +4,26 @@ import Loading from '../../components/UI/Loading';
 import useMoveBack from "../../hooks/useMoveBack";
 import { BiArrowBack } from "react-icons/bi";
 import useMutationData from "../../services/useMutationData";
-import Logo from "../../components/UI/logo";
+import Logo from "../../components/UI/Logo";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
 
   const moveBack = useMoveBack();
 
+  const navigate = useNavigate();
+
   const { handleSubmit, register } = useForm();
 
- 
+  const { mutate, isPending } = useMutationData("auth/login", "POST", "login-toast",
+    {
+      onSuccess: () => { navigate("/panel/appointments"); },
+    }
+  );
 
-  const { mutate, isPending } = useMutationData("login", "POST", "login-toast");
-
-  const onSubmit = async (data) => {
-    await mutate(data);main
-  }
+  const onSubmit = (data) => {
+    mutate(data);
+  };
 
 
   return (
@@ -28,11 +33,11 @@ function Login() {
       <div className="w-full lg:w-1/2 flex items-center justify-center px-4">
         <div className="max-w-sm w-full md:shadow-md p-8 rounded-xl">
           <div className="flex justify-between text-center mb-4">
-           <Logo className="w-[80px]" />
+            <Logo className="w-[80px]" />
 
             <BiArrowBack
               onClick={moveBack}
-              className="text-[#008080] text-2xl" />
+              className="text-emerald-700 text-2xl" />
           </div>
           <h2 className="text-lg uppercase font-semibold py-5">
             ورود
@@ -43,9 +48,12 @@ function Login() {
           >
             <Input
               register={register}
-              name="phone"
+              name="phone_number"
               type="text"
-              label=" لطفا نام کاربری خود را وارد کنید"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              label="لطفا شماره خود را وارد کنید"
+              validationSchema={{ required: "شماره موبایل الزامی است" }}
             />
 
             <Input
@@ -71,7 +79,7 @@ function Login() {
         <img
           src="images\login-image.svg"
           alt="ورود"
-          className=" mx-auto w-[700px]"
+          className=" mx-auto w-[480px]"
         />
       </div>
 

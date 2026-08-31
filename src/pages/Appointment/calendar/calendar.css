@@ -20,13 +20,14 @@
 }
 
 .apt-chip:hover {
-  border-color: #c7cad4;
-  background: #f7f8fa;
+  border-color: #d6a100;
+  /* background: #F6E9B2; */
+  color: #b17812;
 }
 
 .apt-chip.is-active {
-  background: #0066ff;
-  border-color: #0066ff;
+  background: #d6a100;
+  border-color: #d6a100;
   color: #fff;
 }
 
@@ -57,7 +58,6 @@
   color: #5b5e68;
 }
 
-/* ---------- تایم‌لاین نوبت‌ها ---------- */
 
 .apt-timeline {
   position: relative;

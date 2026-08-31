@@ -1,19 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react'
 import DynamicTable from '../../components/UI/DynamicTable';
 import Loading from '../../components/UI/Loading';
-import { FcClock } from 'react-icons/fc';
 import { MdOutlineRestore } from 'react-icons/md';
 import { formatnumber } from '../../Utils/ToPersianNumber';
 import SearchInput from '../../components/UI/SearchInput';
 import Modal from '../../components/UI/modal';
-import History from './History/History';
 import HistoryCustomer from './History/HistoryCustomer';
+import useFetchData from '../../hooks/useFetchData';
 
 function Customers() {
+    const [searchTerm, setSearchTerm] = useState('');
 
-    const openModal = () => {
-        alert("hi modal")
+    const params = new URLSearchParams();
+    if (searchTerm) {
+        if (/^\d+$/.test(searchTerm)) {
+            params.set('phone', searchTerm);
+        } else {
+            params.set('first_name', searchTerm);
+            params.set('last_name', searchTerm);
+        }
     }
+
+    const { data, isLoading } = useFetchData(
+        ['customers-search', searchTerm],
+        `salon/search?${params.toString()}`
+    );
+
+    const rows = data?.data?.map(({ customer, phone }) => ({
+        id: customer.id,
+        name: `${customer.first_name} ${customer.last_name}`,
+        phone: customer.user?.phone || phone,
+        email: customer.user?.email || '-',
+        status: customer.user?.is_active ? 'فعال' : 'غیرفعال',
+    })) || [];
 
     const columns = [
         { label: 'نام', field: 'name', width: '20%' },
@@ -23,7 +42,6 @@ function Customers() {
             width: "20%",
             render: (value) => formatnumber.digits(value),
         },
-        { label: 'خذمات', field: 'service', width: '25%' },
         { label: 'ایمیل', field: 'email', width: '25%' },
         {
             label: 'وضعیت',
@@ -41,35 +59,34 @@ function Customers() {
             render: (_, row) => (
                 <Modal>
                     <Modal.Open>
-                        <button
-                            className="btn--mini"
-                            onClick={() => openModal(row)}
-                        >
+                        <button className="btn--mini">
                             <MdOutlineRestore className="text-base md:text-xl" />
                             تاریخچه
                         </button>
                     </Modal.Open>
                     <Modal.Window>
-                        <HistoryCustomer />
+                        <HistoryCustomer customerId={row.id} />
                     </Modal.Window>
                 </Modal>
             ),
         },
     ];
 
-    const data = [
-        { id: 1, name: 'علی رضایی', email: 'ali@example.com', status: 'فعال', op: <Loading />, service: 'لیزر', phone: "09151542225" },
-        { id: 2, name: 'سارا محمدی', email: 'sara@example.com', status: 'غیرفعال', op: 'کاربر', service: 'لیزر', phone: "09151542225" },
-    ];
-
     return (
-        <div className="w-full container mx-auto p-4" >
-            <div className="max-w-96" >
-                <SearchInput />
-
+        <div className="w-full container mx-auto p-4">
+            <div className="max-w-96">
+                <SearchInput
+                    value={searchTerm}
+                    onChange={setSearchTerm}
+                    placeholder="جستجو بر اساس نام یا شماره تماس"
+                />
             </div>
-            <div className="py-3" >
-                <DynamicTable columns={columns} data={data} keyField="id" />
+            <div className="py-3">
+                {isLoading ? (
+                    <Loading />
+                ) : (
+                    <DynamicTable columns={columns} data={rows} keyField="id" />
+                )}
             </div>
         </div>
     )

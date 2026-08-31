@@ -1,170 +1,190 @@
-import { isPastTime } from "./utils";
 
+import {
+    generateHours,
+    generateMinutes,
+    isPastTime,
+} from "./utils";
 
 export default function ClockCircle({
     mode,
     date,
     time,
-    onSelect
-}){
-
+    onSelect,
+}) {
+    /*
+    |--------------------------------------------------------------------------
+    | Clock values
+    |--------------------------------------------------------------------------
+    */
 
     const values =
-        mode==="hour"
-        ?
-        Array.from({length:24},(_,i)=>i+1)
-        :
-        [
-            "00",
-            "05",
-            "10",
-            "15",
-            "20",
-            "25",
-            "30",
-            "35",
-            "40",
-            "45",
-            "50",
-            "55"
-        ];
-
-
+        mode === "hour"
+            ? generateHours().map((hour) =>
+                  String(hour).padStart(
+                      2,
+                      "0"
+                  )
+              )
+            : generateMinutes();
 
     return (
+        <div
+            className="
+                relative
+                h-72
+                w-72
+                rounded-full
+                border
+                border-slate-200
+                bg-slate-50
+            "
+        >
+            {values.map(
+                (item, index) => {
+                    const angle =
+                        (360 /
+                            values.length) *
+                        index;
 
-        <div className="
-        relative
-        h-72
-        w-72
-        rounded-full
-        border
-        border-slate-200
-        bg-slate-50
-        ">
+                    const x =
+                        50 +
+                        42 *
+                            Math.sin(
+                                (angle *
+                                    Math.PI) /
+                                    180
+                            );
 
+                    const y =
+                        50 -
+                        42 *
+                            Math.cos(
+                                (angle *
+                                    Math.PI) /
+                                    180
+                            );
 
-        {
-            values.map((item,index)=>{
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Past time
+                    |--------------------------------------------------------------------------
+                    */
 
+                    const disabled =
+                        mode === "hour"
+                            ? isPastTime(
+                                  date,
+                                  Number(item),
+                                  0
+                              )
+                            : isPastTime(
+                                  date,
+                                  time.hour,
+                                  Number(item)
+                              );
 
-                const angle =
-                (360 / values.length) * index;
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Selected
+                    |--------------------------------------------------------------------------
+                    */
 
+                    const selected =
+                        mode === "hour"
+                            ? Number(
+                                  time.hour
+                              ) ===
+                              Number(item)
+                            : Number(
+                                  time.minute
+                              ) ===
+                              Number(item);
 
+                    return (
+                        <button
+                            key={item}
+                            type="button"
+                            disabled={
+                                disabled
+                            }
+                            onClick={() =>
+                                onSelect(
+                                    item
+                                )
+                            }
+                            style={{
+                                left: `${x}%`,
+                                top: `${y}%`,
+                            }}
+                            className={`
+                                cursor-pointer
+                                absolute
+                                flex
+                                h-10
+                                w-10
+                                -translate-x-1/2
+                                -translate-y-1/2
+                                items-center
+                                justify-center
+                                rounded-full
+                                text-sm
+                                transition
 
-                const x =
-                50 + 42 * Math.sin(angle*Math.PI/180);
+                                ${
+                                    selected
+                                        ? "scale-110 bg-[#dba400] text-white shadow-lg"
+                                        : "bg-white hover:bg-[#F6E9B2]"
+                                }
 
+                                ${
+                                    disabled
+                                        ? "cursor-not-allowed opacity-30"
+                                        : ""
+                                }
+                            `}
+                        >
+                            {item}
+                        </button>
+                    );
+                }
+            )}
 
-                const y =
-                50 - 42 * Math.cos(angle*Math.PI/180);
+            {/* Center */}
 
-
-
-                const disabled =
-                mode==="hour"
-                ?
-                isPastTime(date,item,time.minute)
-                :
-                false;
-
-
-
-                const selected =
-                mode==="hour"
-                ?
-                time.hour===item
-                :
-                time.minute===item;
-
-
-
-                return (
-
-                <button
-
-                    key={item}
-
-                    disabled={disabled}
-
-                    onClick={()=>onSelect(item)}
-
-                    style={{
-                        left:`${x}%`,
-                        top:`${y}%`
-                    }}
-
-
-                    className={`
+            <div
+                className="
                     absolute
+                    left-1/2
+                    top-1/2
+                    flex
+                    h-16
+                    w-16
                     -translate-x-1/2
                     -translate-y-1/2
-                    flex
-                    h-10
-                    w-10
                     items-center
                     justify-center
                     rounded-full
-                    text-sm
-                    transition
+                    bg-[#dba400]
+                    font-bold
+                    text-white
+                "
+            >
+                {time.hour !== null &&
+                time.hour !== undefined
+                    ? String(
+                          time.hour
+                      ).padStart(2, "0")
+                    : "--"}
 
-                    ${
-                    selected
-                    ?
-                    "bg-blue-500 text-white shadow-lg scale-110"
-                    :
-                    "bg-white hover:bg-blue-50"
-                    }
+                :
 
-                    ${
-                    disabled
-                    ?
-                    "cursor-not-allowed opacity-30"
-                    :
-                    ""
-                    }
-
-                    `}
-
-                >
-
-                    {item}
-
-
-                </button>
-
-                )
-
-            })
-        }
-
-
-        <div className="
-        absolute
-        left-1/2
-        top-1/2
-        -translate-x-1/2
-        -translate-y-1/2
-        flex
-        h-16
-        w-16
-        items-center
-        justify-center
-        rounded-full
-        bg-blue-500
-        text-white
-        font-bold
-        ">
-
-            {time.hour || "--"}
-            :
-            {time.minute || "--"}
-
+                {time.minute !== null &&
+                time.minute !== undefined
+                    ? String(
+                          time.minute
+                      ).padStart(2, "0")
+                    : "--"}
+            </div>
         </div>
-
-
-        </div>
-
-    )
+    );
 }

@@ -1,247 +1,184 @@
-import { Controller, useForm } from "react-hook-form";
-import {
-    HiOutlineUser,
-    HiOutlinePhone,
-    HiOutlineScissors,
-    HiOutlineCurrencyDollar,
-    HiOutlineClock,
-} from "react-icons/hi2";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { HiOutlinePhone } from "react-icons/hi2";
 
 import Input from "../../../components/UI/Input";
-import Select from "../../../components/UI/Select";
 import Loading from "../../../components/UI/Loading";
-import AppointmentDateTimeSelect from "./AppointmentDateTimeSelect";
-import TagsInput from "../../../components/UI/TagsInput";
+import useMutationData from "../../../services/useMutationData";
 
-const serviceOptions = [
-    {
-        value: "",
-        label: "انتخاب خدمت",
-    },
-    {
-        value: "hair",
-        label: "کوتاهی مو",
-    },
-    {
-        value: "color",
-        label: "رنگ مو",
-    },
-    {
-        value: "laser",
-        label: "لیزر",
-    },
-    {
-        value: "nail",
-        label: "ناخن",
-    },
-    {
-        value: "facial",
-        label: "فیشیال",
-    },
-];
+import DatePickerBox from "./DatePickerBox";
+import TimePickerCircle from "./TimePickerCircle";
+import { buildStartTime, getRoundedCurrentTime } from "./utils";
+import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import useSalon from "../../../hooks/useSalon";
 
-function AddAppointmentForm() {
+
+
+function AddAppointmentForm({ onCloseModal }) {
+
+    const { isSalonLoading , salon } = useSalon();
+
+
+const TEMP_SALON_ID = salon.data.id ;
+    
+
+    const queryClient = useQueryClient();
+
     const {
         register,
-        control,
         handleSubmit,
         formState: { errors, isSubmitting },
+        reset,
     } = useForm({
-        defaultValues: {
-            name: "",
-            phone: "",
-            service: "",
-            price: "",
-            time: "",
-        },
+        defaultValues: { phone_number: "" },
     });
 
-    function onSubmit(data) {
-        console.log(data);
-    }
+    const [date, setDate] = useState(null);
+    const [time, setTime] = useState(() => getRoundedCurrentTime());
+    const [appointmentError, setAppointmentError] = useState("");
+
+    const { mutate: createAppointment, isPending } = useMutationData(
+        "appointments/",
+        "POST",
+        "create-appointment",
+        {
+            onSuccess: () => {
+    queryClient.invalidateQueries({
+        queryKey: ["appointments"],
+    });
+
+    reset();
+    setDate(null);
+    setTime(getRoundedCurrentTime());
+    setAppointmentError("");
+
+    toast.success("نوبت با موفقیت ثبت شد.");
+
+    onCloseModal?.();
+},
+        }
+    );
+
+    const onSubmit = (data) => {
+        setAppointmentError("");
+
+        if (!date) {
+            setAppointmentError("لطفاً تاریخ نوبت را انتخاب کنید.");
+            return;
+        }
+
+        const hasTime =
+            time?.hour !== null &&
+            time?.hour !== undefined &&
+            time?.minute !== null &&
+            time?.minute !== undefined;
+
+        if (!hasTime) {
+            setAppointmentError("لطفاً ساعت نوبت را انتخاب کنید.");
+            return;
+        }
+
+        const startTime = buildStartTime(date, time);
+
+        if (!startTime) {
+            setAppointmentError("تاریخ یا ساعت نوبت معتبر نیست.");
+            return;
+        }
+
+        const payload = {
+            phone_number: data.phone_number,
+            service_id: [1], // فعلاً ثابت
+            start_time: startTime,
+            description: "",
+            salon_id: TEMP_SALON_ID,
+            paid_price: 0,
+        };
+
+        createAppointment(payload);
+    };
 
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
-            className="overflow-hidden rounded-3xl  bg-white p-5"
+            className="overflow-hidden rounded-3xl bg-white p-5"
         >
-            {/* Header */}
-
             <div className="border-b border-gray-300 p-3">
-
-                <h2 className="text-lg font-black text-blue-800">
+                <h2 className="text-lg font-black text-[#0A6847]">
                     ثبت نوبت جدید
                 </h2>
-
                 <p className="mt-2 text-sm text-slate-500">
-                    اطلاعات مشتری را وارد کنید و نوبت را ثبت نمایید.
+                    شماره تلفن مشتری را وارد کنید و نوبت را ثبت نمایید.
                 </p>
-
             </div>
 
             <div className="py-5">
+                <div>
+                    <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-700">
+                        <HiOutlinePhone className="text-lg text-[#0A6847]" />
+                        <span>شماره تلفن</span>
+                    </label>
 
-                <div >
-                    <AppointmentDateTimeSelect
-                        name="appointment"
+                    <Input
+                        name="phone_number"
                         register={register}
                         errors={errors}
+                        placeholder="09151234567"
                         validationSchema={{
-                            required: "زمان مراجعه الزامی است"
+                            required: "شماره تلفن الزامی است",
+                            pattern: {
+                                value: /^09\d{9}$/,
+                                message: "شماره موبایل معتبر نیست",
+                            },
                         }}
-
                     />
                 </div>
 
-                <div className="grid gap-4 md:grid-cols-2 pt-5">
+                <div className="mt-6">
+                    <label className="mb-2 block text-sm font-medium text-slate-700">
+                        تاریخ نوبت
+                    </label>
 
-                    {/* نام */}
-                    {/* <div>
-                        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-700">
-
-                            <HiOutlineUser className="text-lg text-blue-600" />
-
-                            <span>نام مشتری</span>
-
-                        </label>
-
-                        <Input
-                            name="name"
-                            register={register}
-                            errors={errors}
-                            placeholder="مثلاً کبری کاریزی"
-                            validationSchema={{
-                                required: "نام مشتری الزامی است",
-                                minLength: {
-                                    value: 3,
-                                    message: "حداقل ۳ کاراکتر وارد کنید",
-                                },
-                            }}
-                        />
-
-                    </div> */}
-
-                    {/* شماره */}
-
-                    <div>
-
-                        <label className="mb-1 flex items-center gap-2 text-sm font-medium text-slate-700">
-                            <HiOutlinePhone className="text-lg text-blue-600" />
-                            <span>شماره تلفن</span>
-                        </label>
-
-                        <Input
-                            name="phone"
-                            register={register}
-                            errors={errors}
-                            placeholder="09151234567"
-                            validationSchema={{
-                                required: "شماره تلفن الزامی است",
-
-                                pattern: {
-                                    value: /^09\d{9}$/,
-                                    message: "شماره موبایل معتبر نیست",
-                                },
-                            }}
-                        />
-
-                    </div>
-
-                    {/* خدمات */}
-
-                    <div>
-
-                        <label className="mb-1 flex items-center gap-2 text-sm font-medium text-slate-700">
-                            <HiOutlineScissors className="text-lg text-blue-600" />
-                            <span>خدمات</span>
-                        </label>
-
-                        <Controller
-                            control={control}
-                            name="services"
-                            rules={{
-                                validate: (value) =>
-                                    value?.length > 0 || "حداقل یک خدمت وارد کنید",
-                            }}
-                            render={({ field }) => (
-                                <TagsInput
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                    placeholder="مثلاً کوتاهی مو"
-                                />
-                            )}
-                        />
-
-                        {errors.service && (
-                            <p className="mt-2 text-sm text-red-500">
-                                {errors.service.message}
-                            </p>
-                        )}
-
-                    </div>
-
-                    {/* مبلغ */}
-                    {/* 
-                    <div>
-                        <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-700">
-                            <HiOutlineCurrencyDollar className="text-lg text-blue-600" />
-                            <span>مبلغ</span>
-                        </label>
-
-                        <Input
-                            name="price"
-                            register={register}
-                            errors={errors}
-                            placeholder="مثلاً 750000"
-                            validationSchema={{
-                                required: "مبلغ را وارد کنید",
-
-                                min: {
-                                    value: 1000,
-                                    message: "مبلغ وارد شده معتبر نیست",
-                                },
-                            }}
-                        />
-                    </div> */}
-
-
-
+                    <DatePickerBox
+                        date={date}
+                        setDate={(value) => {
+                            setDate(value);
+                            setAppointmentError("");
+                        }}
+                    />
                 </div>
 
+                <div className="mt-6">
+                    <label className="mb-2 block text-sm font-medium text-slate-700">
+                        ساعت نوبت
+                    </label>
 
+                    <TimePickerCircle
+                        date={date}
+                        time={time}
+                        setTime={(value) => {
+                            setTime(value);
+                            setAppointmentError("");
+                        }}
+                    />
+                </div>
 
+                {appointmentError && (
+                    <div className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">
+                        {appointmentError}
+                    </div>
+                )}
 
-                {/* <div className="mt-10 rounded-2xl border border-blue-100 bg-blue-50 p-4">
-                    <h3 className="font-bold text-slate-700">
-                        نکته
-                    </h3>
-                    <p className="mt-2 text-sm leading-7 text-slate-500">
-
-                        پس از ثبت نوبت، مشتری مستقیماً به لیست نوبت‌ها اضافه می‌شود.
-                        وضعیت پرداخت در مرحله بعد توسط پذیرش ثبت خواهد شد.
-
-                    </p>
-                </div> */}
-
-                <div className="mt-8 flex justify-end">
-
+                <div className="mt-8">
                     <button
                         type="submit"
-                        disabled={isSubmitting}
-                        className="btn btn--primary bg-blue-600 w-full"
-
+                        disabled={isPending || isSubmitting}
+                        className="btn btn--gold w-full "
                     >
-
-                        {isSubmitting
-                            ? <Loading />
-                            : "ثبت نوبت"}
-
+                        {isPending || isSubmitting ? <Loading /> : "ثبت نوبت"}
                     </button>
-
                 </div>
-
             </div>
-
         </form>
     );
 }

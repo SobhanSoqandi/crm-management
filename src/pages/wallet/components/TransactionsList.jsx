@@ -1,7 +1,8 @@
 // TransactionsList.jsx
 import DynamicTable from "../../../components/UI/DynamicTable";
 import { formatnumber } from "../../../Utils/ToPersianNumber";
-import { transactions } from "../transactionsData";
+import Loading from "../../../components/UI/Loading";
+import useTransactions from "../../../hooks/useTransactions";
 
 const TYPE_LABELS = {
     withdraw: { text: "انتقال", tone: "text-red-600 bg-red-50" },
@@ -14,12 +15,12 @@ const isOutgoing = (type) => type === "withdraw";
 
 const columns = [
     {
-        field: "date",
+        field: "created_at",
         label: "تاریخ",
         width: "120px",
         render: (value) => (
             <span className="text-sm text-gray-600">
-                {formatnumber.digits(value)}
+                {formatnumber.date(new Date(value))}
             </span>
         ),
     },
@@ -57,12 +58,27 @@ const columns = [
 ];
 
 export default function TransactionsList() {
+    const { transactions, isLoading, isError } = useTransactions();
+
     return (
         <div className="bg-white">
             <h3 className="text-base font-semibold text-gray-900 mb-4">
                 تراکنش‌های اخیر
             </h3>
-            <DynamicTable columns={columns} data={transactions} keyField="id" />
+
+            {isLoading ? (
+                <Loading />
+            ) : isError ? (
+                <p className="text-center rounded-2xl bg-rose-50 text-rose-500 py-5">
+                      شما تا کنون پرداختی نداشته اید   
+                </p>
+            ) : transactions.length === 0 ? (
+                <p className="text-center text-slate-400 py-6">
+                    تراکنشی یافت نشد
+                </p>
+            ) : (
+                <DynamicTable columns={columns} data={transactions} keyField="id" />
+            )}
         </div>
     );
 }
