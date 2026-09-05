@@ -30,8 +30,12 @@ function extractAppointments(raw) {
   return [];
 }
 
-// GET /customer هم به همون شکل { data: [...] } برمی‌گرده
 function extractCustomers(raw) {
+  const payload = raw?.data;
+  return Array.isArray(payload) ? payload : [];
+}
+
+function extractServices(raw) {
   const payload = raw?.data;
   return Array.isArray(payload) ? payload : [];
 }
@@ -65,9 +69,18 @@ function Appointments() {
   const { data: customersRaw, isLoading: isCustomersLoading, isError: isCustomersError } =
     useFetchData("customers", "customer");
 
-  const isLoading = isAppointmentsLoading || isCustomersLoading;
+  // اندپوینت عمومی همه‌ی خدمات (همه‌ی سالن‌ها) - برای هر دو نقش سالن و مشتری کار می‌کنه
+  const { data: servicesRaw, isLoading: isServicesLoading } =
+    useFetchData("all-services", "services/");
+
+  const servicesById = useMemo(() => {
+    const list = extractServices(servicesRaw);
+    return new Map(list.map((service) => [service.id, service]));
+  }, [servicesRaw]);
+
+  const isLoading = isAppointmentsLoading || isCustomersLoading || isServicesLoading;
   const isError = isAppointmentsError || isCustomersError;
-  
+
 
   const allAppointments = extractAppointments(appointmentsRaw);
   const allCustomers = extractCustomers(customersRaw);
@@ -98,15 +111,22 @@ function Appointments() {
     return filtered.slice(start, start + PAGE_SIZE);
   }, [filtered, page]);
 
+
   const data = paginated.map((a) => {
     const customer = customersById.get(a.customer_id);
     const dateObj = new Date(a.start_time);
+
+    const serviceNames = (a.appointment_services || [])
+      .map((item) => servicesById.get(item.service_id)?.name)
+      .filter(Boolean)
+      .join("، ");
 
     return {
       id: a.id,
       customerId: a.customer_id,
       name: getCustomerName(customer),
       phone: customer?.user?.phone || "-",
+      services: serviceNames || "-",
       date: dateObj,
       time: dateObj,
       price: a.paid_price,
@@ -114,6 +134,7 @@ function Appointments() {
       isDeleted: a.IsDeleted,
     };
   });
+
 
   const { mutate: deleteAppointment } = useMutationData(
     (id) => `appointments/${id}`,
@@ -138,105 +159,134 @@ function Appointments() {
 
 
   const columns = [
- ...(isSalon
-    ? [
-        {
-          label: "نام",
-          field: "name",
-          width: "20%",
-        },
-         {
-      label: "شماره",
-      field: "phone",
-      width: "20%",
-      render: (value) => formatnumber.digits(value),
-    },
-      ]
-    : []),
-   
+    ...(isSalon
+      ? [
+          {
+            label: "نام",
+            field: "name",
+            width: "20%",
+          },
+          {
+            label: "خدمات",
+            field: "services",
+            width: "20%",
+          },
+          {
+            label: "شماره",
+            field: "phone",
+            width: "20%",
+            render: (value) => formatnumber.digits(value),
+          },
+        ]
+      : [
+          {
+            label: "خدمات",
+            field: "services",
+            width: "25%",
+          },
+        ]),
+
     {
       label: "تاریخ",
       field: "date",
       width: "20%",
-      render: (value) => formatnumber.date(value)
+      render: (value) => formatnumber.date(value),
     },
+
     {
       label: "ساعت",
       field: "time",
       width: "15%",
-      render: (value) => new Date(value).toLocaleTimeString("fa-IR", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+      render: (value) =>
+        new Date(value).toLocaleTimeString("fa-IR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
     },
+
     {
       label: "عملیات",
       width: "10%",
-      render: (_, row) => (
-        <div className="flex gap-3">
-          {!row.isDeleted && (
-            <>
-              {row.is_paid ? (
-                <span
-                  className="flex items-center  bg-emerald-50 text-nowrap border-2 border-emerald-500 text-emerald-500 p-1 rounded-lg font-bold"
-                >
-                  <FaCheckCircle className="inline-block ml-1 text-sm" />
-                  پرداخت شده
-                </span>
-              ) : (
-                <>
-                  <Modal>
-                    <Modal.Open name="payment">
-                      <button className="btn--mini btn--primary text-[#ffffff]">
-                        <FaCoins className="text-xl text-[#e7ad00]" />
-                        <span>پرداخت</span>
-                      </button>
-                    </Modal.Open>
+      render: (_, row) => {
+        // نمایش برای مشتری
+        if (!isSalon) {
+          return row.is_paid ? (
+            <span className="flex w-28 justify-center items-center bg-emerald-50 text-nowrap border-2 border-emerald-500 text-emerald-500 p-1 rounded-lg font-bold">
+                    <FaCheckCircle className="inline-block ml-1 text-sm" />
+                    پرداخت شده
+                  </span>
+          ) : (
+            <span className="flex w-28 justify-center items-center bg-amber-50 text-nowrap border-2 border-amber-400 text-amber-500 p-1 rounded-lg font-bold">
+              در انتظار پرداخت
+            </span>
+          );
+        }
 
-                    <Modal.Window name="payment">
-                      <div className="p-6">
-                        <h2 className="text-lg font-bold">
-                          پرداخت
-                        </h2>
+        // نمایش برای سالن
+        return (
+          <div className="flex gap-3">
+            {!row.isDeleted && (
+              <>
+                {row.is_paid ? (
+                  <span className="flex justify-center items-center bg-emerald-50 text-nowrap border-2 border-emerald-500 text-emerald-500 p-1 rounded-lg font-bold">
+                    <FaCheckCircle className="inline-block ml-1 text-sm" />
+                    پرداخت شده
+                  </span>
+                ) : (
+                  <>
+                    <Modal>
+                      <Modal.Open name="payment">
+                        <button className="btn--mini btn--primary text-[#ffffff]">
+                          <FaCoins className="text-xl text-[#e7ad00]" />
+                          <span>پرداخت</span>
+                        </button>
+                      </Modal.Open>
 
-                        <Payappointment
-                          appointmentId={row.id}
-                          customerId={row.customerId}
+                      <Modal.Window name="payment">
+                        <div className="p-6">
+                          <h2 className="text-lg font-bold">
+                            پرداخت
+                          </h2>
+
+                          <Payappointment
+                            appointmentId={row.id}
+                            customerId={row.customerId}
+                          />
+                        </div>
+                      </Modal.Window>
+                    </Modal>
+
+                    <Modal>
+                      <Modal.Open name="delete">
+                        <button className="btn--mini btn-light text-rose-500 border border-red-400">
+                          <MdDelete className="text-xl" />
+                          <span>حذف</span>
+                        </button>
+                      </Modal.Open>
+
+                      <Modal.Window name="delete">
+                        <ConfirmDelete
+                          resourceName="نوبت"
+                          onConfirm={() => deleteAppointment(row.id)}
                         />
-                      </div>
-                    </Modal.Window>
-                  </Modal>
+                      </Modal.Window>
+                    </Modal>
+                  </>
+                )}
+              </>
+            )}
 
-                  <Modal>
-                    <Modal.Open name="delete">
-                      <button className="btn--mini btn-light text-rose-500 border border-red-400">
-                        <MdDelete className="text-xl" />
-                        <span>حذف</span>
-                      </button>
-                    </Modal.Open>
-
-                    <Modal.Window name="delete">
-                      <ConfirmDelete
-                        resourceName="نوبت"
-                        onConfirm={() => deleteAppointment(row.id)}
-                      />
-                    </Modal.Window>
-                  </Modal>
-                </>
-              )}
-            </>
-          )}
-
-          {row.isDeleted && (
-            <button className="btn--mini bg-blue-400 text-white">
-              <MdOutlineRestorePage className="text-xl" />
-              <span>جایگزینی</span>
-            </button>
-          )}
-        </div>
-      ),
-    }
-  ]
+            {row.isDeleted && (
+              <button className="btn--mini bg-blue-400 text-white">
+                <MdOutlineRestorePage className="text-xl" />
+                <span>جایگزینی</span>
+              </button>
+            )}
+          </div>
+        );
+      },
+    },
+  ];
 
   return (
     <div className="container mx-auto">

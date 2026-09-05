@@ -17,11 +17,11 @@ import Services from './pages/salonservices/Services'
 
 function App() {
 
-  const ROLES = {
-    ADMIN: "admin",
-    CUSTOMER: "customer",
-    OWNER: "owner",
-  };
+const ROLES = {
+  ADMIN: 1,
+  OWNER: 2,
+  CUSTOMER: 3,
+};
 
 
   return (
@@ -34,6 +34,8 @@ function App() {
         {/* <Route path="/" element={<Landing />} /> */}
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
+        <Route path="register/:salonId" element={<Register />} />
+
 
 
 
@@ -42,12 +44,16 @@ function App() {
           <Route
             path="customers"
             element={
-              // <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.OWNER]}>
+              <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.OWNER]}>
                 <Customers />
-              // </ProtectedRoute>
+              </ProtectedRoute>
             }
           />
-          <Route path="appointments" element={<Appointments />
+
+          <Route path="appointments" element={
+            <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.OWNER]}>
+              <Appointments />
+            </ProtectedRoute>
           } />
           <Route path="messages" element={<Messages />} />
           <Route path="services" element={<Services />} />

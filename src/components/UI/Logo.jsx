@@ -4,7 +4,7 @@ function Logo({
 }) {
   return (
     <img
-      src="/images/logo.png"
+      src="/images/logo.svg"
       alt={alt}
       className={className}
     />
