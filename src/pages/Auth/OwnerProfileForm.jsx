@@ -5,20 +5,33 @@ import useMutationData from "../../services/useMutationData";
 import Input from "../../components/UI/Input";
 import Loading from "../../components/UI/Loading";
 import useSalon from "../../hooks/useSalon";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
 
 function OwnerProfileForm() {
+  const queryClient = useQueryClient();
+
   const { salon, isLoading: isSalonLoading } = useSalon();
 
-  console.log("salon :", salon);
+  const OWNER_ID = salon?.data?.owner_id;
 
-  // ایجاد سالن
-  const { mutate: createSalon, isPending: isCreating } = useMutationData(
+  console.log("this is owner id : " , OWNER_ID);
+  
+
+  const { mutate: createSalon, isPending: isCreating } =
+  useMutationData(
     "salon",
     "post",
-    "create-salon"
+    "create-salon",
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["salon"],
+        });
+      },
+    }
   );
 
-  // ویرایش اطلاعات سالن
+  
   const { mutate: updateSalon, isPending: isUpdating } = useMutationData(
     "salon",
     "put",
@@ -49,11 +62,13 @@ function OwnerProfileForm() {
       name: "",
       location: "",
       back_percent: 0,
-      owner_id: 9,
+      owner_id: OWNER_ID,
     });
   };
 
-  // در حال دریافت اطلاعات سالن
+ 
+  
+
   if (isSalonLoading) {
     return (
       <div className="max-w-sm w-full md:shadow-md p-8 rounded-xl flex items-center justify-center">
@@ -62,7 +77,7 @@ function OwnerProfileForm() {
     );
   }
 
-  // اگر سالن وجود ندارد
+
   if (!salon?.data) {
     return (
       <div className="max-w-sm w-full md:shadow-md p-8 rounded-xl">

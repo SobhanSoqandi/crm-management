@@ -1,4 +1,4 @@
-// TransactionsList.jsx
+
 import DynamicTable from "../../../components/UI/DynamicTable";
 import { formatnumber } from "../../../Utils/ToPersianNumber";
 import Loading from "../../../components/UI/Loading";
@@ -9,9 +9,23 @@ const TYPE_LABELS = {
     deposit: { text: "واریز", tone: "text-green-600 bg-green-50" },
     cashback: { text: "بازگشت وجه", tone: "text-emerald-600 bg-emerald-50" },
     referral: { text: "دعوت دوستان", tone: "text-blue-600 bg-blue-50" },
+    spend: { text: "پرداخت از کیف پول", tone: "text-red-600 bg-red-50" },
 };
 
-const isOutgoing = (type) => type === "withdraw";
+const isOutgoing = (type) => type === "withdraw" || type === "spend";
+
+
+const DEFAULT_DESCRIPTION = {
+    cashback: "بازگشت وجه",
+    spend: "پرداخت از کیف پول",
+    withdraw: "برداشت از حساب",
+    deposit: "واریز به کیف پول",
+};
+
+function resolveDescription(row) {
+    if (row.description && row.description !== "NULL") return row.description;
+    return DEFAULT_DESCRIPTION[row.type] ?? "-";
+}
 
 const columns = [
     {
@@ -27,11 +41,14 @@ const columns = [
     {
         field: "description",
         label: "توضیحات",
+        render: (value, row) => (
+            <span className="text-sm text-gray-600">{resolveDescription(row)}</span>
+        ),
     },
     {
         field: "type",
         label: "نوع تراکنش",
-        width: "140px",
+        width: "190px",
         render: (value) => {
             const { text, tone } = TYPE_LABELS[value] ?? { text: value, tone: "text-gray-600 bg-gray-50" };
             return (
@@ -51,7 +68,7 @@ const columns = [
                     }`}
             >
                 {isOutgoing(row.type) ? "-" : "+"}
-                {formatnumber.price(value)}
+                {formatnumber.price(Number(value))}
             </span>
         ),
     },

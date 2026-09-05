@@ -3,7 +3,7 @@ import useFetchData from "./useFetchData";
 
 export default function useSalon(opt = {}) {
   const { data, isLoading, isError, error, refetch } = useFetchData(
-    "slaon",
+    "salon",
     "salon/user_id",
     opt
   );

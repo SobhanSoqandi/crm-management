@@ -1,12 +1,8 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import Loading from "../UI/Loading";
 import useAuthorize from "../../pages/Auth/useAuthorize";
 
-
 function ProtectedRoute({ children, allowedRoles = [] }) {
-  const navigate = useNavigate();
-
   const {
     role,
     isLoading,
@@ -14,32 +10,7 @@ function ProtectedRoute({ children, allowedRoles = [] }) {
     isProfileCompleted,
   } = useAuthorize();
 
-  const isAuthorized = allowedRoles.includes(role);
-
-  useEffect(() => {
-    if (isLoading) return;
-
-    if (!isAuthenticated) {
-      navigate("/login", { replace: true });
-      return;
-    }
-
-    if (!isProfileCompleted) {
-      navigate("/panel/profile", { replace: true });
-      return;
-    }
-
-    if (!isAuthorized) {
-      navigate("/not-access", { replace: true });
-    }
-  }, [
-    isLoading,
-    isAuthenticated,
-    isProfileCompleted,
-    isAuthorized,
-    navigate,
-  ]);
-
+  // هنوز اطلاعات کاربر مشخص نشده
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen bg-secondary-100">
@@ -48,12 +19,30 @@ function ProtectedRoute({ children, allowedRoles = [] }) {
     );
   }
 
-  if (!isAuthenticated) return null;
+  // کاربر لاگین نیست
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
-  if (!isProfileCompleted) return null;
+  // پروفایل کامل نشده
+  if (!isProfileCompleted) {
+    return <Navigate to="/panel/profile" replace />;
+  }
 
-  if (!isAuthorized) return null;
+  // تبدیل role به number برای جلوگیری از مشکل "2" و 2
+  const userRole = Number(role);
 
+  // بررسی دسترسی
+  const isAuthorized =
+    allowedRoles.length === 0 ||
+    allowedRoles.map(Number).includes(userRole);
+
+  // دسترسی ندارد
+  if (!isAuthorized) {
+    return <Navigate to="/not-access" replace />;
+  }
+
+  // همه چیز درست است
   return children;
 }
 

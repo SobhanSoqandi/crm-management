@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import Input from "../../components/UI/Input";
 import Select from "../../components/UI/Select";
@@ -8,7 +9,7 @@ import useMoveBack from "../../hooks/useMoveBack";
 import Logo from "../../components/UI/Logo";
 import useMutationData from "../../services/useMutationData";
 import useFetchData from "../../hooks/useFetchData";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const HIDDEN_ROLES = ["admin"];
 
@@ -21,11 +22,13 @@ function Register() {
   const moveBack = useMoveBack();
 
 const navigate = useNavigate();
+const { salonId } = useParams();
 
   const {
     handleSubmit,
     register,
     control,
+    setValue,
     formState: { errors },
   } = useForm();
 
@@ -44,12 +47,28 @@ const navigate = useNavigate();
         label: ROLE_LABELS[role.name] ?? role.name,
       })) ?? [];
 
+  useEffect(() => {
+    if (!salonId || !rolesData?.data) return;
+
+    const customerRole = rolesData.data.find((role) => role.name === "customer");
+    if (customerRole) {
+      setValue("role_id", customerRole.id, { shouldValidate: true });
+    }
+  }, [salonId, rolesData, setValue]);
+
   const onSubmit = async (formData) => {
+    const roleId = Number(formData.role_id);
+    const selectedRole = rolesData?.data?.find((role) => role.id === roleId);
+
     const payload = {
       phone: formData.phone,
       password_hash: formData.password,
-      role_id: Number(formData.role_id),
+      role_id: roleId,
     };
+
+    if (selectedRole?.name === "customer") {
+      payload.salon_id = Number(salonId);
+    }
 
     await mutate(payload);
   };

@@ -9,11 +9,10 @@ import { MdPayment } from "react-icons/md";
 import { formatnumber } from "../../../Utils/ToPersianNumber";
 import useMutationData from "../../../services/useMutationData";
 import useWallet from "../../../hooks/useWallet";
+import useSalon from "../../../hooks/useSalon";
+import Loading from "../../../components/UI/Loading";
 
-// TODO: درصد بازگشت وجه فعلاً ثابت است؛ بعداً می‌تواند از تنظیمات سالن خوانده شود
-const CASHBACK_PERCENT = 0.10; // 10%
 
-// نوع تراکنش‌ها طبق enum فعلی بک‌اند: فقط "cashback" یا "spend" مجاز است
 const TRANSACTION_TYPE = {
   SPEND: "spend",
   CASHBACK: "cashback",
@@ -24,6 +23,11 @@ function extractWalletId(wallet) {
 }
 
 export default function Payappointment({ appointmentId, customerId }) {
+
+    const { salon, isSalonLoading } = useSalon();
+
+  const CASHBACK_PERCENT = Number(salon?.data?.back_percent ?? 0) / 100;
+
   const queryClient = useQueryClient();
 
   const {
@@ -115,8 +119,7 @@ export default function Payappointment({ appointmentId, customerId }) {
       queryClient.invalidateQueries({ queryKey: ["wallet"] });
       queryClient.invalidateQueries({ queryKey: ["wallet-transactions"] });
     } catch (err) {
-      // toast خطا را خود useMutationData در onError نمایش می‌دهد؛
-      // اینجا فقط جلوی ادامه‌ی مراحل بعدی را می‌گیریم
+     
     }
   };
 

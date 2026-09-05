@@ -1,4 +1,3 @@
-
 import React from "react";
 import DynamicTable from "../../components/UI/DynamicTable";
 import Loading from "../../components/UI/Loading";
@@ -6,31 +5,19 @@ import { MdEdit, MdDeleteOutline, MdAdd } from "react-icons/md";
 import { formatnumber } from "../../Utils/ToPersianNumber";
 import Modal from "../../components/UI/modal";
 import DeleteService from "./DeleteService";
-import useFetchData from "../../hooks/useFetchData";
 import ServiceForm from "./ServiceForm";
-import useSalon from "../../hooks/useSalon";
+import useServices from "../../hooks/useServices";
 
 function Services() {
-    const { salon, isSalonLoading } = useSalon();
+    const { services, salonId, isLoading } = useServices();
 
-    const salonId = salon?.data?.id;
-
-    const { data, isLoading } = useFetchData(
-        ["services-list", salonId],
-        `salon/{salon-id}/services?salon_id=${salonId}`,
-        {
-            enabled: !!salonId,
-        }
-    );
-
-    const rows =
-        data?.data?.map((service) => ({
-            id: service.id,
-            name: service.name,
-            salon_id: service.salon_id,
-            is_active: service.is_active,
-            createdAt: service.CreatedAt,
-        })) || [];
+    const rows = services.map((service) => ({
+        id: service.id,
+        name: service.name,
+        salon_id: service.salon_id,
+        is_active: service.is_active,
+        createdAt: service.CreatedAt,
+    }));
 
     const columns = [
         {
@@ -117,7 +104,7 @@ function Services() {
             </div>
 
             <div className="py-3">
-                {isSalonLoading || isLoading ? (
+                {isLoading ? (
                     <Loading />
                 ) : (
                     <DynamicTable

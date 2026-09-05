@@ -8,7 +8,7 @@ export default function useWallet(customerId) {
 
   const { data, isLoading, isError, refetch } = useFetchData(
     ["wallet", resolvedCustomerId],
-    `wallets/${resolvedCustomerId}`,
+    `wallets/customer/${resolvedCustomerId}`, // بر اساس customer_id، نه id خودِ ولت
     { enabled: !!resolvedCustomerId }
   );
 

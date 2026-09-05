@@ -5,7 +5,7 @@ import useMoveBack from "../../hooks/useMoveBack";
 import { BiArrowBack } from "react-icons/bi";
 import useMutationData from "../../services/useMutationData";
 import Logo from "../../components/UI/Logo";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
 
@@ -72,7 +72,14 @@ function Login() {
             }
 
           </form>
+          <div className="flex gap-2" >
+            <span> سالن زیایی دارید؟  </span>
+            <Link to="/register" className="text-[#0a6847]" >
+              ثبت نام کنید
+            </Link>
+          </div>
         </div>
+
       </div>
 
       <div className=" lg:flex w-1/2 items-center justify-center mx-auto">

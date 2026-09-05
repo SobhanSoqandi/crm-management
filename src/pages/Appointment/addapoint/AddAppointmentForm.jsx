@@ -1,41 +1,73 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { HiOutlinePhone } from "react-icons/hi2";
+import { HiOutlinePhone, HiCheckCircle, HiOutlineUserPlus } from "react-icons/hi2";
+import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 import Input from "../../../components/UI/Input";
 import Loading from "../../../components/UI/Loading";
+import ServiceMultiSelect from "../../../components/UI/ServiceMultiSelect";
 import useMutationData from "../../../services/useMutationData";
+import useFetchData from "../../../hooks/useFetchData";
+import useSalon from "../../../hooks/useSalon";
 
 import DatePickerBox from "./DatePickerBox";
 import TimePickerCircle from "./TimePickerCircle";
 import { buildStartTime, getRoundedCurrentTime } from "./utils";
-import { useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
-import useSalon from "../../../hooks/useSalon";
 
-
+const PHONE_REGEX = /^09\d{9}$/;
 
 function AddAppointmentForm({ onCloseModal }) {
-
-    const { isSalonLoading , salon } = useSalon();
-
-
-const TEMP_SALON_ID = salon.data.id ;
-    
-
+    const { salon, isSalonLoading } = useSalon();
+    const salonId = salon?.data?.id;
     const queryClient = useQueryClient();
 
     const {
         register,
         handleSubmit,
+        watch,
         formState: { errors, isSubmitting },
         reset,
     } = useForm({
-        defaultValues: { phone_number: "" },
+        defaultValues: {
+            phone_number: "",
+        },
     });
+
+    const phoneNumber = watch("phone_number");
+    const [debouncedPhone, setDebouncedPhone] = useState("");
+
+    useEffect(() => {
+        const timeout = setTimeout(() => setDebouncedPhone(phoneNumber || ""), 400);
+        return () => clearTimeout(timeout);
+    }, [phoneNumber]);
+
+    const isPhoneComplete = PHONE_REGEX.test(debouncedPhone);
+
+    // فقط وقتی شماره کامل و معتبره جستجو انجام میشه
+    const { data: customerSearchRaw, isLoading: isSearchingCustomer } = useFetchData(
+        ["customer-search", debouncedPhone],
+        `salon/search?phone=${debouncedPhone}`,
+        { enabled: isPhoneComplete }
+    );
+
+    const matchedCustomer = isPhoneComplete
+        ? (customerSearchRaw?.data ?? []).find(
+              (item) =>
+                  item.customer?.user?.phone === debouncedPhone ||
+                  item.phone === debouncedPhone
+          )
+        : null;
+
+    const matchedCustomerName = matchedCustomer
+        ? `${matchedCustomer.customer?.first_name ?? matchedCustomer.first_name ?? ""} ${
+              matchedCustomer.customer?.last_name ?? matchedCustomer.last_name ?? ""
+          }`.trim()
+        : "";
 
     const [date, setDate] = useState(null);
     const [time, setTime] = useState(() => getRoundedCurrentTime());
+    const [serviceIds, setServiceIds] = useState([]);
     const [appointmentError, setAppointmentError] = useState("");
 
     const { mutate: createAppointment, isPending } = useMutationData(
@@ -44,24 +76,29 @@ const TEMP_SALON_ID = salon.data.id ;
         "create-appointment",
         {
             onSuccess: () => {
-    queryClient.invalidateQueries({
-        queryKey: ["appointments"],
-    });
+                queryClient.invalidateQueries({
+                    queryKey: ["appointments"],
+                });
 
-    reset();
-    setDate(null);
-    setTime(getRoundedCurrentTime());
-    setAppointmentError("");
+                reset();
+                setDate(null);
+                setTime(getRoundedCurrentTime());
+                setServiceIds([]);
+                setAppointmentError("");
 
-    toast.success("نوبت با موفقیت ثبت شد.");
-
-    onCloseModal?.();
-},
+                toast.success("نوبت با موفقیت ثبت شد.");
+                onCloseModal?.();
+            },
         }
     );
 
     const onSubmit = (data) => {
         setAppointmentError("");
+
+        if (!serviceIds.length) {
+            setAppointmentError("لطفاً حداقل یک خدمت انتخاب کنید.");
+            return;
+        }
 
         if (!date) {
             setAppointmentError("لطفاً تاریخ نوبت را انتخاب کنید.");
@@ -86,17 +123,19 @@ const TEMP_SALON_ID = salon.data.id ;
             return;
         }
 
-        const payload = {
+        createAppointment({
             phone_number: data.phone_number,
-            service_id: [1], // فعلاً ثابت
+            service_id: serviceIds,
             start_time: startTime,
             description: "",
-            salon_id: TEMP_SALON_ID,
+            salon_id: salonId,
             paid_price: 0,
-        };
-
-        createAppointment(payload);
+        });
     };
+
+    if (isSalonLoading) {
+        return <Loading />;
+    }
 
     return (
         <form
@@ -107,8 +146,9 @@ const TEMP_SALON_ID = salon.data.id ;
                 <h2 className="text-lg font-black text-[#0A6847]">
                     ثبت نوبت جدید
                 </h2>
+
                 <p className="mt-2 text-sm text-slate-500">
-                    شماره تلفن مشتری را وارد کنید و نوبت را ثبت نمایید.
+                    شماره تلفن مشتری و خدمات موردنظر را وارد کنید.
                 </p>
             </div>
 
@@ -127,9 +167,40 @@ const TEMP_SALON_ID = salon.data.id ;
                         validationSchema={{
                             required: "شماره تلفن الزامی است",
                             pattern: {
-                                value: /^09\d{9}$/,
+                                value: PHONE_REGEX,
                                 message: "شماره موبایل معتبر نیست",
                             },
+                        }}
+                    />
+
+                    {isPhoneComplete && (
+                        <div className="mt-2">
+                            {isSearchingCustomer ? (
+                                <div className="flex items-center gap-2 text-xs text-slate-400">
+                                    <span className="h-3 w-3 animate-spin rounded-full border-2 border-slate-300 border-t-slate-500" />
+                                    در حال بررسی شماره...
+                                </div>
+                            ) : matchedCustomer ? (
+                                <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-600">
+                                    <HiCheckCircle className="text-base" />
+                                    مشتری: {matchedCustomerName || "بدون نام"}
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-2 rounded-lg bg-amber-50 px-3 py-2 text-sm font-medium text-amber-600">
+                                    <HiOutlineUserPlus className="text-base" />
+                                    این شماره جدید است و به‌عنوان مشتری جدید ثبت می‌شود
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+
+                <div className="mt-6">
+                    <ServiceMultiSelect
+                        value={serviceIds}
+                        onChange={(value) => {
+                            setServiceIds(value);
+                            setAppointmentError("");
                         }}
                     />
                 </div>
@@ -172,10 +243,14 @@ const TEMP_SALON_ID = salon.data.id ;
                 <div className="mt-8">
                     <button
                         type="submit"
-                        disabled={isPending || isSubmitting}
-                        className="btn btn--gold w-full "
+                        disabled={isPending || isSubmitting || !salonId}
+                        className="btn btn--gold w-full"
                     >
-                        {isPending || isSubmitting ? <Loading /> : "ثبت نوبت"}
+                        {isPending || isSubmitting ? (
+                            <Loading />
+                        ) : (
+                            "ثبت نوبت"
+                        )}
                     </button>
                 </div>
             </div>
