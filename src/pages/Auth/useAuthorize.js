@@ -16,7 +16,7 @@ export default function useAuthorize() {
   const isPanelRoute = location.pathname.includes("/panel");
 
   const isProfileCompleted =
-    Boolean(user?.user_name) &&
+    // Boolean(user?.user_name) &&
     Boolean(user?.email);
 
   const role = user?.role_id ?? null;

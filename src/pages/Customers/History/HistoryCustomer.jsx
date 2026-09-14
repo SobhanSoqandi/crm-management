@@ -28,7 +28,7 @@ function HistoryCustomer({ customerId }) {
     {
       label: "وضعیت پرداخت",
       field: "status",
-      width: "15%",
+      width: "40%",
       render: (value) => (
         <span
           className={`px-3 py-1 rounded-full text-xs ${
@@ -43,17 +43,21 @@ function HistoryCustomer({ customerId }) {
     },
   ];
 
-  const rows = data?.map((item) => {
+  const rows = data?.data?.map((item) => {
     const start = new Date(item.start_time);
+
     return {
-      id: item.id,
-      date: start.toLocaleDateString("fa-IR"),
-      time: start.toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" }),
-      servicesCount: item.appointment_services?.length || 0,
-      price: Number(item.paid_price),
-      status: item.is_paid ? "پرداخت شده" : "پرداخت نشده",
+        id: item.id,
+        date: start.toLocaleDateString("fa-IR"),
+        time: start.toLocaleTimeString("fa-IR", {
+            hour: "2-digit",
+            minute: "2-digit",
+        }),
+        servicesCount: item.appointment_services?.length || 0,
+        price: Number(item.paid_price),
+        status: item.is_paid ? "پرداخت شده" : "پرداخت نشده",
     };
-  }) || [];
+}) || [];
 
   const customer = data?.[0]?.customer;
   const totalPaid = rows

@@ -59,7 +59,7 @@ function CompleteProfile() {
 
                     <BiArrowBack
                         onClick={moveBack}
-                        className="text-blue-500 text-2xl cursor-pointer"
+                        className="text-[#0a6847] text-2xl cursor-pointer"
                     />
                 </div>
 

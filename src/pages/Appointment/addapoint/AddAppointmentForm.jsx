@@ -44,26 +44,44 @@ function AddAppointmentForm({ onCloseModal }) {
 
     const isPhoneComplete = PHONE_REGEX.test(debouncedPhone);
 
-    // فقط وقتی شماره کامل و معتبره جستجو انجام میشه
-    const { data: customerSearchRaw, isLoading: isSearchingCustomer } = useFetchData(
+    // fast api : 
+    // const { data: customerSearchRaw, isLoading: isSearchingCustomer } = useFetchData(
+    //     ["customer-search", debouncedPhone],
+    //     `salon/search?phone=${debouncedPhone}`,
+    //     { enabled: isPhoneComplete }
+    // );
+
+    // const matchedCustomer = isPhoneComplete
+    //     ? (customerSearchRaw?.data ?? []).find(
+    //           (item) =>
+    //               item.customer?.user?.phone === debouncedPhone ||
+    //               item.phone === debouncedPhone
+    //       )
+    //     : null;
+
+    // const matchedCustomerName = matchedCustomer
+    //     ? `${matchedCustomer.customer?.first_name ?? matchedCustomer.first_name ?? ""} ${
+    //           matchedCustomer.customer?.last_name ?? matchedCustomer.last_name ?? ""
+    //       }`.trim()
+    //     : "";
+
+    // laravel : 
+    const { data: customerSearchRaw, isLoading: isSearchingCustomer } =
+    useFetchData(
         ["customer-search", debouncedPhone],
         `salon/search?phone=${debouncedPhone}`,
         { enabled: isPhoneComplete }
     );
 
-    const matchedCustomer = isPhoneComplete
-        ? (customerSearchRaw?.data ?? []).find(
-              (item) =>
-                  item.customer?.user?.phone === debouncedPhone ||
-                  item.phone === debouncedPhone
-          )
-        : null;
+const matchedCustomer = isPhoneComplete
+    ? (customerSearchRaw?.data ?? []).find(
+          (item) => item.user?.phone === debouncedPhone
+      )
+    : null;
 
-    const matchedCustomerName = matchedCustomer
-        ? `${matchedCustomer.customer?.first_name ?? matchedCustomer.first_name ?? ""} ${
-              matchedCustomer.customer?.last_name ?? matchedCustomer.last_name ?? ""
-          }`.trim()
-        : "";
+const matchedCustomerName = matchedCustomer
+    ? `${matchedCustomer.first_name ?? ""} ${matchedCustomer.last_name ?? ""}`.trim()
+    : "";
 
     const [date, setDate] = useState(null);
     const [time, setTime] = useState(() => getRoundedCurrentTime());

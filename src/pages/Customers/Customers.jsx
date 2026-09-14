@@ -26,13 +26,13 @@ function Customers() {
         `salon/search?${params.toString()}`
     );
 
-    const rows = data?.data?.map(({ customer, phone }) => ({
-        id: customer.id,
-        name: `${customer.first_name} ${customer.last_name}`,
-        phone: customer.user?.phone || phone,
-        email: customer.user?.email || '-',
-        status: customer.user?.is_active ? 'فعال' : 'غیرفعال',
-    })) || [];
+  const rows = data?.data?.map((customer) => ({
+    id: customer.id,
+    name: `${customer.first_name} ${customer.last_name}`,
+    phone: customer.user?.phone || '-',
+    email: customer.user?.email || '-',
+    status: customer.user?.is_active ? 'فعال' : 'غیرفعال',
+})) || [];
 
     const columns = [
         { label: 'نام', field: 'name', width: '20%' },
@@ -59,7 +59,7 @@ function Customers() {
             render: (_, row) => (
                 <Modal>
                     <Modal.Open>
-                        <button className="btn--mini">
+                        <button className="btn--mini btn--gold">
                             <MdOutlineRestore className="text-base md:text-xl" />
                             تاریخچه
                         </button>

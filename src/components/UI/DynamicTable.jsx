@@ -12,8 +12,8 @@ function getRowStyle(row) {
 
     if (row.is_paid) {
         return {
-            row: "bg-[#f1fff1] border-b border-emerald-100",
-            card: "rounded-2xl border border-emerald-200 bg-[#f1fff1] shadow-sm p-4",
+            row: "bg-[#f5fffc] border-b border-emerald-100",
+            card: "rounded-2xl border border-emerald-200 bg-[#f5fffc] shadow-sm p-4",
             title: "text-base font-bold text-gray-800 mb-3",
             cell: "text-sm text-gray-800 text-left",
         };
@@ -29,7 +29,7 @@ function getRowStyle(row) {
 
 const DynamicTable = ({ columns, data, keyField = "id" }) => {
     if (!data?.length) {
-        return <span className="text-rose-600 bg-red-50 p-3 rounded-2xl" >  داده ای یافت نشد . . .   </span>;
+        return <span className="text-rose-600 bg-[#fff] p-3 rounded-2xl" >  داده ای یافت نشد . . .   </span>;
     }
 
     const actionColumns = columns.filter((c) => !c.field && c.render);
