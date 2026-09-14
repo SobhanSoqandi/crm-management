@@ -8,7 +8,7 @@ function useServices() {
 
     const { data, isLoading, isError, error, refetch } = useFetchData(
         ["services-list", salonId],
-        `salon/{salon-id}/services?salon_id=${salonId}`,
+        `salon/${salonId}/services`,
         {
             enabled: !!salonId,
         }

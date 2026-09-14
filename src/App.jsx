@@ -14,6 +14,7 @@ import Messages from './pages/messages/Messages'
 import SupportPage from './pages/support/SupportPage'
 import ProtectedRoute from './components/common/ProtectedRoute'
 import Services from './pages/salonservices/Services'
+import Dashboard from './pages/dashboard/Dashboard'
 
 function App() {
 
@@ -40,6 +41,7 @@ const ROLES = {
 
 
         <Route path="/panel" element={<AppLayout />} >
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="profile" element={<CompleteProfile />} />
           <Route
             path="customers"

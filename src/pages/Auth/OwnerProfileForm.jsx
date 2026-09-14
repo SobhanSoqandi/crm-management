@@ -1,45 +1,33 @@
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import useMutationData from "../../services/useMutationData";
 import Input from "../../components/UI/Input";
 import Loading from "../../components/UI/Loading";
 import useSalon from "../../hooks/useSalon";
-import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 function OwnerProfileForm() {
   const queryClient = useQueryClient();
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   const { salon, isLoading: isSalonLoading } = useSalon();
 
-  const OWNER_ID = salon?.data?.owner_id;
-
-  console.log("this is owner id : " , OWNER_ID);
-  
-
   const { mutate: createSalon, isPending: isCreating } =
-  useMutationData(
-    "salon",
-    "post",
-    "create-salon",
-    {
+    useMutationData("salon", "POST", "create-salon", {
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: ["salon"],
         });
       },
-    }
-  );
+    });
 
-  
-  const { mutate: updateSalon, isPending: isUpdating } = useMutationData(
-    "salon",
-    "put",
-    "update-salon"
-  );
+  const { mutate: updateSalon, isPending: isUpdating } =
+    useMutationData("salon", "PUT", "update-salon");
 
   const { register, handleSubmit } = useForm({
-    values: salon
+    values: salon?.data
       ? {
           name: salon.data.name || "",
           location: salon.data.location || "",
@@ -49,25 +37,22 @@ function OwnerProfileForm() {
   });
 
   const onSubmit = ({ name, location, back_percent }) => {
-    updateSalon({
+    if (salon?.data) {
+      updateSalon({
+        name,
+        location,
+        back_percent: Number(back_percent),
+      });
+
+      return;
+    }
+
+    createSalon({
       name,
       location,
       back_percent: Number(back_percent),
     });
   };
-
-  // ایجاد سالن اولیه
-  const handleCreateSalon = () => {
-    createSalon({
-      name: "",
-      location: "",
-      back_percent: 0,
-      owner_id: OWNER_ID,
-    });
-  };
-
- 
-  
 
   if (isSalonLoading) {
     return (
@@ -77,8 +62,8 @@ function OwnerProfileForm() {
     );
   }
 
-
-  if (!salon?.data) {
+  
+  if (!salon?.data && !showCreateForm) {
     return (
       <div className="max-w-sm w-full md:shadow-md p-8 rounded-xl">
         <h2 className="text-lg font-semibold mb-3">
@@ -89,28 +74,21 @@ function OwnerProfileForm() {
           برای تکمیل اطلاعات پروفایل، ابتدا باید سالن خود را ایجاد کنید.
         </p>
 
-        {isCreating ? (
-          <div className="flex justify-center py-3">
-            <Loading size="Medium" />
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={handleCreateSalon}
-            className="btn btn--primary bg-[#e7ad00] w-full my-2"
-          >
-            افزودن سالن
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={() => setShowCreateForm(true)}
+          className="btn btn--primary bg-[#e7ad00] w-full my-2"
+        >
+          افزودن سالن
+        </button>
       </div>
     );
   }
 
-  // اگر سالن وجود دارد، فرم تکمیل اطلاعات نمایش داده شود
   return (
     <div className="max-w-sm w-full md:shadow-md p-8 rounded-xl">
       <h2 className="text-lg font-semibold mb-6">
-        تکمیل اطلاعات سالن
+        {salon?.data ? "تکمیل اطلاعات سالن" : "ایجاد سالن"}
       </h2>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -152,14 +130,16 @@ function OwnerProfileForm() {
           }}
         />
 
-        {isUpdating ? (
-          <Loading size="Medium" />
+        {isCreating || isUpdating ? (
+          <div className="flex justify-center py-3">
+            <Loading size="Medium" />
+          </div>
         ) : (
           <button
             type="submit"
             className="btn btn--primary bg-[#e7ad00] w-full my-6"
           >
-            تایید
+            {salon?.data ? "تایید" : "ایجاد سالن"}
           </button>
         )}
       </form>

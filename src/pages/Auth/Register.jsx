@@ -13,6 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const HIDDEN_ROLES = ["admin"];
 
+
 const ROLE_LABELS = {
   customer: "مشتری",
   owner: "سالن",
@@ -46,6 +47,9 @@ const { salonId } = useParams();
         value: role.id,
         label: ROLE_LABELS[role.name] ?? role.name,
       })) ?? [];
+
+      console.log("ROLES DATA:", rolesData);
+console.log("ROLE OPTIONS:", roleOptions);
 
   useEffect(() => {
     if (!salonId || !rolesData?.data) return;
