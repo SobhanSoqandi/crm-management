@@ -135,6 +135,9 @@ const matchedCustomerName = matchedCustomer
         }
 
         const startTime = buildStartTime(date, time);
+        
+             console.log("SELECTED TIME:", time);
+console.log("START TIME SENT TO API:", startTime);
 
         if (!startTime) {
             setAppointmentError("تاریخ یا ساعت نوبت معتبر نیست.");

@@ -7,17 +7,17 @@ import useTransactions from "../../../hooks/useTransactions";
 const TYPE_LABELS = {
     withdraw: { text: "انتقال", tone: "text-red-600 bg-red-50" },
     deposit: { text: "واریز", tone: "text-green-600 bg-green-50" },
-    cashback: { text: "بازگشت وجه", tone: "text-emerald-600 bg-emerald-50" },
+    CASHBACK: { text: "بازگشت وجه", tone: "text-emerald-600 bg-emerald-50" },
     referral: { text: "دعوت دوستان", tone: "text-blue-600 bg-blue-50" },
-    spend: { text: "پرداخت از کیف پول", tone: "text-red-600 bg-red-50" },
+    SPEND: { text: "پرداخت از کیف پول", tone: "text-red-600 bg-red-50" },
 };
 
-const isOutgoing = (type) => type === "withdraw" || type === "spend";
+const isOutgoing = (type) => type === "withdraw" || type === "SPEND";
 
 
 const DEFAULT_DESCRIPTION = {
-    cashback: "بازگشت وجه",
-    spend: "پرداخت از کیف پول",
+    CASHBACK: "بازگشت وجه",
+    SPEND: "پرداخت از کیف پول",
     withdraw: "برداشت از حساب",
     deposit: "واریز به کیف پول",
 };

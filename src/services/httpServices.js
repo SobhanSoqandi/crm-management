@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const BASE_URL = "http://127.0.0.1:8000/api";
+// const BASE_URL = "http://paydarsys.ir/api";
 
 const app = axios.create({
   baseURL: BASE_URL,
@@ -14,8 +15,7 @@ app.interceptors.request.use((config) => {
   return config;
 });
 
-// همه‌ی 401های همزمان به همین یک Promise وصل می‌شن؛
-// فقط یک درخواست /auth/refresh واقعی ارسال می‌شه (single-flight).
+
 let refreshPromise = null;
 
 function refreshTokens() {
