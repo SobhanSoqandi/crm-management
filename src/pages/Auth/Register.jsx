@@ -22,8 +22,8 @@ const ROLE_LABELS = {
 function Register() {
   const moveBack = useMoveBack();
 
-const navigate = useNavigate();
-const { salonId } = useParams();
+  const navigate = useNavigate();
+  const { salonId } = useParams();
 
   const {
     handleSubmit,
@@ -34,7 +34,7 @@ const { salonId } = useParams();
   } = useForm();
 
   const { mutate, isPending: isRegistering } = useMutationData("user", "POST", "register-toast",
-       {
+    {
       onSuccess: () => { navigate("/login"); },
     }
   );
@@ -48,17 +48,22 @@ const { salonId } = useParams();
         label: ROLE_LABELS[role.name] ?? role.name,
       })) ?? [];
 
-      console.log("ROLES DATA:", rolesData);
-console.log("ROLE OPTIONS:", roleOptions);
+  console.log("ROLES DATA:", rolesData);
+  console.log("ROLE OPTIONS:", roleOptions);
+
 
   useEffect(() => {
-    if (!salonId || !rolesData?.data) return;
+    if (!rolesData?.data) return;
 
-    const customerRole = rolesData.data.find((role) => role.name === "customer");
-    if (customerRole) {
-      setValue("role_id", customerRole.id, { shouldValidate: true });
+    const ownerRole = rolesData.data.find((role) => role.name === "owner");
+
+    if (ownerRole) {
+      setValue("role_id", ownerRole.id, {
+        shouldValidate: true,
+        shouldDirty: false,
+      });
     }
-  }, [salonId, rolesData, setValue]);
+  }, [rolesData, setValue]);
 
   const onSubmit = async (formData) => {
     const roleId = Number(formData.role_id);
@@ -111,7 +116,6 @@ console.log("ROLE OPTIONS:", roleOptions);
               name="role_id"
               control={control}
               rules={{ required: "انتخاب نقش الزامی است" }}
-              defaultValue=""
               render={({ field }) => (
                 <Select
                   name="role_id"

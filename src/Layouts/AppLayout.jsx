@@ -59,7 +59,7 @@ function AppLayout() {
             label: "داشبورد",
             icon: <FaChartColumn className="w-6 h-6" />,
             path: "/panel/dashboard",
-            roles: [1],
+            roles: [2 , 3],
         },
         {
             label: "پروفایل",

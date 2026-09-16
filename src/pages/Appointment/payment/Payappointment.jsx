@@ -24,7 +24,7 @@ function extractWalletId(wallet) {
 
 export default function Payappointment({ appointmentId, customerId }) {
 
-    const { salon, isSalonLoading } = useSalon();
+  const { salon, isSalonLoading } = useSalon();
 
   const CASHBACK_PERCENT = Number(salon?.data?.back_percent ?? 0) / 100;
 
@@ -85,6 +85,13 @@ export default function Payappointment({ appointmentId, customerId }) {
         customer_id: customerId,
       });
 
+      // await payAppointment({
+      //   price: enteredAmount,
+      //   wallet_amount: walletDeduction,
+      //   appointment_id: appointmentId,
+      //   customer_id: customerId,
+      // });
+
       if (walletDeduction > 0) {
         await createWalletTransaction({
           wallet_id: walletId,
@@ -119,7 +126,7 @@ export default function Payappointment({ appointmentId, customerId }) {
       queryClient.invalidateQueries({ queryKey: ["wallet"] });
       queryClient.invalidateQueries({ queryKey: ["wallet-transactions"] });
     } catch (err) {
-     
+
     }
   };
 
@@ -152,11 +159,10 @@ export default function Payappointment({ appointmentId, customerId }) {
               type="button"
               disabled={isWalletLoading || walletBalance <= 0}
               onClick={() => setUseWalletPayment((prev) => !prev)}
-              className={`w-full py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
-                useWalletPayment
+              className={`w-full py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${useWalletPayment
                   ? "bg-[#e7ad00] text-white"
                   : "bg-[#e7ad00] text-white hover:bg-[#e7ad00]"
-              }`}
+                }`}
             >
               <MdPayment />
               <span>
