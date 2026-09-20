@@ -6,10 +6,13 @@ export function CustomNavLink({
   notif,
   label,
   isCollapsed,
+  onClick
 }) {
   return (
     <li>
-      <NavLink to={to}>
+      <NavLink to={to} 
+      onClick={onClick}
+      >
         {({ isActive }) => (
           <div
             className={`
@@ -23,7 +26,7 @@ export function CustomNavLink({
               ${
                 isActive
                   ? `
-                    text-[#d6a100]
+                    text-cyan-500
                     shadow-sm
                     before:absolute
                     before:right-0
@@ -31,10 +34,10 @@ export function CustomNavLink({
                     before:-translate-y-1/2
                     before:w-1
                     before:h-8
-                    before:bg-[#d6a100]
+                    before:bg-cyan-500
                     before:rounded-l-full
                   `
-                  : "text-zinc-500 hover:bg-[#fff8db] hover:text-[#daa400]"
+                  : "text-zinc-500 hover:bg-[#e8feff] hover:text-cyan-500"
               }
             `}
           >

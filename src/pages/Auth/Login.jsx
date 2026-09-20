@@ -1,15 +1,13 @@
 import { useForm } from "react-hook-form";
 import Input from "../../components/UI/Input"
 import Loading from '../../components/UI/Loading';
-import useMoveBack from "../../hooks/useMoveBack";
-import { BiArrowBack } from "react-icons/bi";
 import useMutationData from "../../services/useMutationData";
 import Logo from "../../components/UI/Logo";
 import { Link, useNavigate } from "react-router-dom";
+import MoveBack from "../../components/UI/MoveBack";
 
 function Login() {
 
-  const moveBack = useMoveBack();
 
   const navigate = useNavigate();
 
@@ -28,19 +26,16 @@ function Login() {
 
   return (
 
-    <div className="flex-1 lg:flex min-h-screen select-none pt-28 lg:pt-0" >
+    <div className="flex-1 lg:flex min-h-screen select-none pt-5 lg:pt-0" >
 
       <div className="w-full lg:w-1/2 flex items-center justify-center px-4">
         <div className="max-w-sm w-full md:shadow-md p-8 rounded-xl">
           <div className="flex justify-between text-center mb-4">
             <Logo className="w-[80px]" />
-
-            <BiArrowBack
-              onClick={moveBack}
-              className="text-emerald-700 text-2xl" />
+            <MoveBack />
           </div>
-          <h2 className="text-lg uppercase font-semibold py-5">
-            ورود
+          <h2 className="text-lg text-[#172980] uppercase font-semibold py-5">
+            ورود به پایدار
           </h2>
 
           <form
@@ -72,9 +67,9 @@ function Login() {
             }
 
           </form>
-          <div className="flex gap-2" >
-            <span> سالن زیایی دارید؟  </span>
-            <Link to="/register" className="text-[#0a6847]" >
+          <div className="flex text-zinc-500 gap-2" >
+            <span> سالن زیبایی دارید؟  </span>
+            <Link to="/register" className="text-gold font-bold" >
               ثبت نام کنید
             </Link>
           </div>

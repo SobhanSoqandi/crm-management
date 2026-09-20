@@ -1,4 +1,5 @@
-// Wallet.jsx
+import { useEffect } from "react";
+
 import WalletCards from "./components/WalletCards";
 
 import Loading from "../../components/UI/Loading";
@@ -16,6 +17,17 @@ const COMING_SOON_CARDS = [
 export default function Wallet() {
   const { balance, isLoading, isError } = useWallet();
 
+ 
+
+    useEffect(() => {
+      const audio = new Audio("/voice/cash-suand.mp3");
+      audio.volume = 0.35;
+
+      audio.play().catch(() => { });
+    }, []);
+
+   
+
   const handleTransfer = ({ recipient, amount }) => {
     toast.success("انتقال یافت");
   };
@@ -26,7 +38,7 @@ export default function Wallet() {
   ];
 
   return (
-    <div dir="rtl" className="container md:max-w-7xl mx-auto p-5 space-y-6 ">
+    <div dir="rtl" className="container md:max-w-7xl mx-auto p-5 space-y-6">
       <div>
         <h2 className="text-lg font-semibold text-gray-900 mb-1">کیف پول</h2>
         <p className="text-sm text-gray-500">مدیریت موجودی و انتقال وجه</p>

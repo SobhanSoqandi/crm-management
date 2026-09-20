@@ -122,7 +122,7 @@ function CloseButton({ onClick, children }) {
         top: 12,
         left: 12,
         border: "none",
-        background: "#f2f2f2",
+        background: "#b97e00",
         borderRadius: "50%",
         width: 32,
         height: 32,
@@ -131,7 +131,7 @@ function CloseButton({ onClick, children }) {
         justifyContent: "center",
         fontSize: 18,
         cursor: "pointer",
-        color: "#444",
+        color: "#b97e00",
       }}
     >
       {children}
@@ -166,11 +166,7 @@ Modal.Close = Close;
 
 export default Modal;
 
-/* ------------------------------------------------------------------ */
-/*  نمونه استفاده دقیقاً مطابق چیزی که خواستی                          */
-/*  نکته: name توی Modal.Open و Modal.Window باید یکی باشه             */
-/*  (توی پیامت "پرداخت" و "payment" فرق داشتن، اینجا هماهنگش کردم)     */
-/* ------------------------------------------------------------------ */
+
 
 export function Example() {
   return (
@@ -203,7 +199,7 @@ export function Example() {
               <button
                 style={{
                   marginTop: 16,
-                  background: "#e5e7eb",
+                  background: "#b97e00",
                   padding: "8px 16px",
                   borderRadius: 8,
                   border: "none",

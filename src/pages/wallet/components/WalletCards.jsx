@@ -5,7 +5,7 @@ import { GrMoney } from "react-icons/gr";
 
 
 const ICONS = {
-  FiCreditCard: FiCreditCard,
+  FiCreditCard: GrMoney,
   FiUsers: FiUsers,
   FiRefreshCw: FiRefreshCw,
 };
@@ -48,12 +48,12 @@ export default function WalletCards({ items }) {
 
     <div
       className={`rounded-2xl flex items-center justify-center p-2 ${
-        isPrimary ? "bg-[#F6E9B2]" : "bg-gray-200"
+        isPrimary ? "bg-emerald-600" : "bg-gray-200"
       }`}
     >
       <Icon
-        className={`text-3xl md:text-4xl ${
-          isPrimary ? "text-[#daa400]" : "text-gray-400"
+        className={`text-3xl md:text-5xl ${
+          isPrimary ? "text-[#ffc415]" : "text-gray-400"
         }`}
       />
     </div>

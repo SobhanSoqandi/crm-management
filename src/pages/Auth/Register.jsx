@@ -3,13 +3,12 @@ import { useForm, Controller } from "react-hook-form";
 import Input from "../../components/UI/Input";
 import Select from "../../components/UI/Select";
 import Loading from '../../components/UI/Loading';
-import { BiArrowBack } from "react-icons/bi";
-import useMoveBack from "../../hooks/useMoveBack";
 
 import Logo from "../../components/UI/Logo";
 import useMutationData from "../../services/useMutationData";
 import useFetchData from "../../hooks/useFetchData";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import MoveBack from "../../components/UI/MoveBack";
 
 const HIDDEN_ROLES = ["admin"];
 
@@ -20,7 +19,6 @@ const ROLE_LABELS = {
 };
 
 function Register() {
-  const moveBack = useMoveBack();
 
   const navigate = useNavigate();
   const { salonId } = useParams();
@@ -83,15 +81,17 @@ function Register() {
   };
 
   return (
-    <div className="flex-1 lg:flex min-h-screen select-none pt-28 lg:pt-0">
+    <div className="flex-1 lg:flex min-h-screen select-none pt-5 lg:pt-0">
       <div className="w-full lg:w-1/2 flex items-center justify-center px-4">
         <div className="max-w-sm w-full md:shadow-md p-8 rounded-xl">
           <div className="flex justify-between text-center mb-4">
             <Logo className="w-20" />
-            <BiArrowBack onClick={moveBack} className="text-emerald-700 text-2xl" />
+            <div>
+              <MoveBack />
+            </div>
           </div>
 
-          <h2 className="text-lg uppercase font-semibold py-5">ثبت نام</h2>
+          <h2 className="text-lg text-[#172980] font-semibold py-5">ثبت نام</h2>
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <Input
@@ -131,11 +131,17 @@ function Register() {
             {isRegistering ? (
               <Loading size="Medium" />
             ) : (
-              <button type="submit" className="btn btn--gold w-full my-6">
+              <button type="submit" className="btn btn--primary w-full my-6">
                 ثبت نام
               </button>
             )}
           </form>
+          <div className="flex text-zinc-500 gap-2" >
+            <span>   حساب کاربری دارید ؟   </span>
+            <Link to="/login" className="text-gold font-bold" >
+              ورود  
+            </Link>
+          </div>
         </div>
       </div>
 

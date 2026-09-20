@@ -29,7 +29,11 @@ function getRowStyle(row) {
 
 const DynamicTable = ({ columns, data, keyField = "id" }) => {
     if (!data?.length) {
-        return <span className="text-rose-600 bg-[#fff] p-3 rounded-2xl" >  داده ای یافت نشد . . .   </span>;
+        return (
+            <span className="text-rose-600 bg-[#fff] p-3 rounded-2xl">
+                داده ای یافت نشد . . .
+            </span>
+        );
     }
 
     const actionColumns = columns.filter((c) => !c.field && c.render);
@@ -38,16 +42,18 @@ const DynamicTable = ({ columns, data, keyField = "id" }) => {
 
     return (
         <div className="w-full">
-           
-            <div className="hidden md:block overflow-x-auto overflow-y-auto max-h-[500px] ">
+
+            {/* Desktop */}
+            <div className="hidden md:block overflow-x-auto overflow-y-auto max-h-[500px]">
                 <table className="w-full text-sm text-right">
-                    <thead>
+
+                    <thead className="sticky top-0 z-20 bg-white">
                         <tr className="border-b border-gray-200">
                             {columns.map((col, idx) => (
                                 <th
                                     key={idx}
                                     style={{ width: col.width }}
-                                    className="px-4 py-3 font-semibold text-gray-600"
+                                    className="px-4 py-3 font-semibold text-gray-600 bg-white"
                                 >
                                     {col.label}
                                 </th>
@@ -58,10 +64,17 @@ const DynamicTable = ({ columns, data, keyField = "id" }) => {
                     <tbody>
                         {data.map((row) => {
                             const style = getRowStyle(row);
+
                             return (
-                                <tr key={row[keyField]} className={style.row}>
+                                <tr
+                                    key={row[keyField]}
+                                    className={style.row}
+                                >
                                     {columns.map((col, idx) => (
-                                        <td key={idx} className="px-4 py-4">
+                                        <td
+                                            key={idx}
+                                            className="px-4 py-4"
+                                        >
                                             {col.render
                                                 ? col.render(row[col.field], row)
                                                 : row[col.field]}
@@ -71,15 +84,21 @@ const DynamicTable = ({ columns, data, keyField = "id" }) => {
                             );
                         })}
                     </tbody>
+
                 </table>
             </div>
 
+            {/* Mobile */}
             <div className="md:hidden flex flex-col gap-3 overflow-y-scroll max-h-[400px]">
                 {data.map((row) => {
                     const style = getRowStyle(row);
+
                     return (
-                        <div key={row[keyField]} className={style.card}>
-                            
+                        <div
+                            key={row[keyField]}
+                            className={style.card}
+                        >
+
                             {row.isDeleted && (
                                 <div className="mb-3 flex items-center justify-between">
                                     <span className="text-base font-medium text-gray-500 bg-gray-200 px-2 py-1 rounded-md">
@@ -88,13 +107,13 @@ const DynamicTable = ({ columns, data, keyField = "id" }) => {
                                 </div>
                             )}
 
-                       
-
-                           
                             {titleColumn && (
                                 <div className={style.title}>
                                     {titleColumn.render
-                                        ? titleColumn.render(row[titleColumn.field], row)
+                                        ? titleColumn.render(
+                                            row[titleColumn.field],
+                                            row
+                                        )
                                         : row[titleColumn.field]}
                                 </div>
                             )}
@@ -108,14 +127,16 @@ const DynamicTable = ({ columns, data, keyField = "id" }) => {
 
                                         <span className={style.cell}>
                                             {col.render
-                                                ? col.render(row[col.field], row)
+                                                ? col.render(
+                                                    row[col.field],
+                                                    row
+                                                )
                                                 : row[col.field]}
                                         </span>
                                     </Fragment>
                                 ))}
                             </div>
 
-                       
                             {actionColumns.length > 0 && (
                                 <div
                                     className={
@@ -131,10 +152,12 @@ const DynamicTable = ({ columns, data, keyField = "id" }) => {
                                     ))}
                                 </div>
                             )}
+
                         </div>
                     );
                 })}
             </div>
+
         </div>
     );
 };

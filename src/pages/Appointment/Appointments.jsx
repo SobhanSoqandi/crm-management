@@ -236,8 +236,8 @@ function Appointments() {
                   <>
                     <Modal>
                       <Modal.Open name="payment">
-                        <button className="btn--mini btn--primary text-[#ffffff]">
-                          <FaCoins className="text-xl text-[#e7ad00]" />
+                        <button className="btn--mini btn--lux text-[#ffffff]">
+                          <FaCoins className="text-xl text-[#ffc311]" />
                           <span>پرداخت</span>
                         </button>
                       </Modal.Open>
