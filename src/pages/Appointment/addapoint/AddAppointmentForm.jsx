@@ -176,7 +176,7 @@ console.log("START TIME SENT TO API:", startTime);
             <div className="py-5">
                 <div>
                     <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-700">
-                        <HiOutlinePhone className="text-lg text-[#0A6847]" />
+                        <HiOutlinePhone className="text-lg text-cyan-500" />
                         <span>شماره تلفن</span>
                     </label>
 
@@ -265,7 +265,7 @@ console.log("START TIME SENT TO API:", startTime);
                     <button
                         type="submit"
                         disabled={isPending || isSubmitting || !salonId}
-                        className="btn btn--gold w-full"
+                        className="btn btn--primary w-full"
                     >
                         {isPending || isSubmitting ? (
                             <Loading />

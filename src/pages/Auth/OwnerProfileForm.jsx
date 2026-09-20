@@ -87,7 +87,7 @@ function OwnerProfileForm() {
 
   return (
     <div className="max-w-sm w-full md:shadow-md p-8 rounded-xl">
-      <h2 className="text-lg font-semibold mb-6">
+      <h2 className="text-lg font-semibold mb-6 text-[#172980]">
         {salon?.data ? "تکمیل اطلاعات سالن" : "ایجاد سالن"}
       </h2>
 
@@ -137,7 +137,7 @@ function OwnerProfileForm() {
         ) : (
           <button
             type="submit"
-            className="btn btn--primary bg-[#e7ad00] w-full my-6"
+            className="btn btn--lux w-full my-6"
           >
             {salon?.data ? "تایید" : "ایجاد سالن"}
           </button>

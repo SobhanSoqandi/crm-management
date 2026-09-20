@@ -1,18 +1,17 @@
 import React from "react";
 import { BiArrowBack } from "react-icons/bi";
 import { useForm } from "react-hook-form";
-
-import useMoveBack from "../../hooks/useMoveBack";
 import useUser from "../../hooks/useUser";
 import useMutationData from "../../services/useMutationData";
 import Input from "../../components/UI/Input";
 import Loading from "../../components/UI/Loading";
 import CustomerProfileForm from "./CustomerProfileForm";
 import OwnerProfileForm from "./OwnerProfileForm";
+import MoveBack from "../../components/UI/MoveBack";
 
 
 function CompleteProfile() {
-    const moveBack = useMoveBack();
+    
 
     const { user, isLoading: isUserLoading } = useUser();
 
@@ -51,16 +50,13 @@ function CompleteProfile() {
     const isOwner = user.role_id === 2;
 
     return (
-        <div className="w-full min-h-screen flex flex-col md:flex-row items-center justify-center gap-6 px-4 py-10">
+        <div className="w-full min-h-screen flex flex-col md:flex-row items-center justify-center gap-6 px-4">
 
             <div className="max-w-sm w-full md:shadow-md p-8 rounded-xl">
                 <div className="flex justify-between items-center text-center mb-6">
-                    <h2 className="text-lg font-semibold">تکمیل پروفایل</h2>
+                    <h2 className="text-lg text-[#172980] font-semibold">تکمیل پروفایل</h2>
 
-                    <BiArrowBack
-                        onClick={moveBack}
-                        className="text-[#0a6847] text-2xl cursor-pointer"
-                    />
+                   <MoveBack />
                 </div>
 
                 <form onSubmit={handleSubmit(onSubmit)}>

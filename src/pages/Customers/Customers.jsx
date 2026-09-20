@@ -59,7 +59,7 @@ function Customers() {
             render: (_, row) => (
                 <Modal>
                     <Modal.Open>
-                        <button className="btn--mini btn--gold">
+                        <button className="btn--mini btn--lux">
                             <MdOutlineRestore className="text-base md:text-xl" />
                             تاریخچه
                         </button>

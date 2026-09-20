@@ -15,6 +15,7 @@ import SupportPage from './pages/support/SupportPage'
 import ProtectedRoute from './components/common/ProtectedRoute'
 import Services from './pages/salonservices/Services'
 import Dashboard from './pages/dashboard/Dashboard'
+import Instruction from './pages/instruction/Instruction'
 
 function App() {
 
@@ -32,7 +33,7 @@ const ROLES = {
         reverseOrder={false}
       />
       <Routes>
-        {/* <Route path="/" element={<Landing />} /> */}
+        <Route path="/" element={<Landing />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="register/:salonId" element={<Register />} />
@@ -43,6 +44,7 @@ const ROLES = {
         <Route path="/panel" element={<AppLayout />} >
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="profile" element={<CompleteProfile />} />
+          <Route path="inst" element={<Instruction />} />
           <Route
             path="customers"
             element={

@@ -18,6 +18,7 @@ import Loading from "../components/UI/Loading";
 import useAuthorize from "../pages/Auth/useAuthorize";
 import useUser from "../hooks/useUser";
 import toast from "react-hot-toast";
+import { BiSupport } from "react-icons/bi";
 
 
 function AppLayout() {
@@ -59,7 +60,7 @@ function AppLayout() {
             label: "داشبورد",
             icon: <FaChartColumn className="w-6 h-6" />,
             path: "/panel/dashboard",
-            roles: [2 , 3],
+            roles: [2, 3],
         },
         {
             label: "پروفایل",
@@ -92,6 +93,12 @@ function AppLayout() {
             roles: [1],
         },
         {
+            label: " آموزش استفاده ",
+            icon: <BiSupport className="w-6 h-6" />,
+            path: "inst",
+            roles: [2],
+        },
+        {
             label: "پنل پیامکی",
             icon: <TbMessageCog className="w-6 h-6" />,
             path: "messages",
@@ -100,13 +107,13 @@ function AppLayout() {
     ].filter((item) => item.roles.includes(role));
 
 
-   
+
     const toggleSidebar = () => {
         setIsOpen((prev) => !prev);
     };
 
 
-   
+
     const closeSidebar = () => {
         setIsOpen(false);
     };
@@ -115,13 +122,13 @@ function AppLayout() {
     return (
         <div className="min-h-screen">
 
-            
+
             <Header onToggleSidebar={toggleSidebar} />
 
 
             <div className="relative flex gap-4 sm:px-4 py-4">
 
-                
+
                 <Sidebar
                     isOpen={isOpen}
                     onClose={closeSidebar}
@@ -129,7 +136,7 @@ function AppLayout() {
                 />
 
 
-               
+
                 <div className="flex justify-center w-full">
                     <Outlet />
                 </div>

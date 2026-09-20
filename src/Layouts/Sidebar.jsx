@@ -55,7 +55,7 @@ function Sidebar({ isOpen, onClose, menuItems, title }) {
             <button
                 type="button"
                 onClick={onClose}
-                className="absolute top-3 left-5 z-20 w-9 h-9 flex items-center justify-center rounded-lg text-[#daa400] hover:bg-yellow-50 active:scale-95 transition-all duration-200"
+                className="absolute top-3 left-5 z-20 w-9 h-9 flex items-center justify-center rounded-lg text-gold hover:bg-yellow-50 active:scale-95 transition-all duration-200"
             >
                 <IoClose className="text-2xl" />
             </button>
@@ -65,9 +65,9 @@ function Sidebar({ isOpen, onClose, menuItems, title }) {
                 onClick={() => setIsCollapsed((prev) => !prev)}
                 aria-label={isCollapsed ? "باز کردن سایدبار" : "کوچک کردن سایدبار"}
                 title={isCollapsed ? "باز کردن سایدبار" : "کوچک کردن سایدبار"}
-                className="absolute left-0 top-1/2 -translate-y-1/2 w-3 h-16 flex items-center justify-center rounded-r-lg bg-[#F6E9B2] hover:bg-[#f3df8d] transition-colors duration-200"
+                className="absolute left-0 top-1/2 -translate-y-1/2 w-3 h-16 flex items-center justify-center rounded-r-lg hover:bg-[#d09100] bg-[#dbae46] transition-colors duration-200"
             >
-                <FaGripLinesVertical className="text-[#d6a100]" />
+                <FaGripLinesVertical className="text-[#fff]" />
             </button>
 
             <div className="p-4 pt-14">
@@ -94,6 +94,7 @@ function Sidebar({ isOpen, onClose, menuItems, title }) {
                             icon={item.icon}
                             isCollapsed={isCollapsed}
                             label={item.label}
+                             onClick={onClose}
                         />
                     ))}
 

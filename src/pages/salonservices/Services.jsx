@@ -51,7 +51,7 @@ function Services() {
                 <div className="flex items-center gap-2">
                     <Modal>
                         <Modal.Open>
-                            <button className="btn--mini btn--gold text-[#fdfdfd]">
+                            <button className="btn--mini btn--lux text-[#fdfdfd]">
                                 <MdEdit className="text-base md:text-xl" />
                                 ویرایش
                             </button>

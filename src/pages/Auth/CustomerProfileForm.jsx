@@ -60,7 +60,7 @@ function CustomerProfileForm() {
 
     return (
         <div className="max-w-sm w-full md:shadow-md p-8 rounded-xl">
-            <h2 className="text-lg font-semibold mb-6">تکمیل اطلاعات مشتری</h2>
+            <h2 className="text-lg font-semibold mb-6 text-[#172980]">تکمیل اطلاعات مشتری</h2>
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Input register={register} name="first_name" type="text" label="نام" />

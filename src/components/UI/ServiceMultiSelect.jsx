@@ -3,6 +3,9 @@ import { HiChevronDown, HiCheck, HiMagnifyingGlass, HiXMark } from "react-icons/
 import useServices from "../../hooks/useServices";
 import Loading from "./Loading";
 
+import { FaScissors } from "react-icons/fa6";
+
+
 function ServiceMultiSelect({ value = [], onChange }) {
     const { services, isLoading } = useServices();
     const [open, setOpen] = useState(false);
@@ -56,7 +59,8 @@ function ServiceMultiSelect({ value = [], onChange }) {
 
     return (
         <div className="relative" ref={containerRef}>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-700">
+                <FaScissors className="text-lg text-cyan-500" />
                 خدمات
             </label>
 
@@ -65,7 +69,7 @@ function ServiceMultiSelect({ value = [], onChange }) {
                 onClick={() => setOpen((prev) => !prev)}
                 className={`flex min-h-12 w-full items-center justify-between gap-2 rounded-xl border bg-white px-4 py-2 text-sm transition-colors ${
                     open
-                        ? "border-[#e4ab00] ring-1 ring-[#e4ab00]"
+                        ? "border-[#00b0c4] ring-1 ring-[#00b0c4]"
                         : "border-slate-200"
                 }`}
             >
@@ -74,7 +78,7 @@ function ServiceMultiSelect({ value = [], onChange }) {
                         {selectedServices.map((service) => (
                             <span
                                 key={service.id}
-                                className="flex items-center gap-1 rounded-lg bg-[#c4ffd7] px-2.5 py-1 text-xs font-medium text-[#0A6847]"
+                                className="flex items-center gap-1 rounded-lg bg-[#c4ffff] px-2.5 py-1 text-xs font-medium text-[#006b7d]"
                             >
                                 {service.name}
                                 <span
@@ -144,14 +148,14 @@ function ServiceMultiSelect({ value = [], onChange }) {
                                                 onClick={() => toggleService(service.id)}
                                                 className={`flex w-full items-center gap-3 rounded-lg my-1 px-3 py-2.5 text-right text-sm transition-colors ${
                                                     checked
-                                                        ? "bg-[#b2f6cc]"
+                                                        ? "bg-cyan-200"
                                                         : "hover:bg-slate-50"
                                                 }`}
                                             >
                                                 <span
                                                     className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-colors ${
                                                         checked
-                                                            ? "border-[#ecf1ef] bg-[#007b50] text-white"
+                                                            ? "border-[#ecf1ef] bg-[#0084a5] text-white"
                                                             : "border-slate-400 bg-white"
                                                     }`}
                                                 >

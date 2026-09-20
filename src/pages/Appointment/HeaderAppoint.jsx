@@ -5,12 +5,17 @@ import Modal from "../../components/UI/modal";
 import AddAppointmentForm from "./addapoint/AddAppointmentForm";
 
 
-function HeaderAppoint({ phone, onPhoneChange, startDate, onStartDateChange , isSalon }) {
+function HeaderAppoint({ phone, onPhoneChange, startDate, onStartDateChange, isSalon }) {
 
   return (
     <div className="md:flex justify-between space-y-5 md:space-y-0 mx-3">
       <div className="flex gap-2 items-center">
-        <AppointmentDateSelector value={startDate} onChange={onStartDateChange} />
+        <div className="relative flex items-center gap-2">
+          <AppointmentDateSelector
+            value={startDate}
+            onChange={onStartDateChange}
+          />
+        </div>
       </div>
 
       {
